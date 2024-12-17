@@ -1,5 +1,5 @@
 import React from 'react';
-import { Brain, MessageSquare, Package, Users, DollarSign, BarChart3, Target, Sparkles, Shield, Truck, Type } from 'lucide-react';
+import { Brain, MessageSquare, Package, Users, DollarSign, BarChart3, Target, Sparkles, Shield, Truck, Type, Image } from 'lucide-react';
 import { KiApp } from '../types';
 
 export const kiApps: KiApp[] = [
@@ -18,11 +18,11 @@ export const kiApps: KiApp[] = [
     component: React.lazy(() => import('../components/KiApps/WordCount/WordCount')),
   },
   {
-    id: 'imageai',
-    name: 'AI Analysis',
-    description: 'Intelligent data analysis and visualization with advanced machine learning capabilities',
-    icon: <Brain className="h-8 w-8" />,
-    component: React.lazy(() => import('../components/KiApps/ImageAI')),
+    id: 'bgremover',
+    name: 'BG Remover',
+    description: 'Remove background from images using AI',
+    icon: <Image className="h-8 w-8" />,
+    component: React.lazy(() => import('../components/KiApps/BGRemover/BGRemover')),
   },
   {
     id: 'productai',
@@ -79,5 +79,12 @@ export const kiApps: KiApp[] = [
     description: 'Smart logistics and delivery route optimization',
     icon: <Truck className="h-8 w-8" />,
     component: React.lazy(() => import('../components/KiApps/LogisticsAI')),
+  },
+  {
+    id: 'imageai',
+    name: 'AI Analysis',
+    description: 'Intelligent data analysis and visualization with advanced machine learning capabilities',
+    icon: <Brain className="h-8 w-8" />,
+    component: React.lazy(() => import('../components/KiApps/ImageAI')),
   }
 ];
