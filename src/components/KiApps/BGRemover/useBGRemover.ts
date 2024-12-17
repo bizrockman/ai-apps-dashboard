@@ -39,11 +39,22 @@ export const useBGRemover = () => {
 
       setResult(response.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      console.error('Error processing image:', err);
-    } finally {
-      setIsProcessing(false);
-    }
+  // Check if the error has additional details or data
+  if (err instanceof Error) {
+    console.error('Error message:', err.message);
+    console.error('Error stack:', err.stack);
+  } else if (err.response) {
+    // Log specific details from the API response if available
+    console.error('API response error:', err.response.data);
+  } else {
+    console.error('Unexpected error:', err);
+  }
+
+  // Set a user-friendly error message
+  setError(err?.message || 'An unknown error occurred');
+} finally {
+  setIsProcessing(false);
+}
   }, []);
 
   return {
