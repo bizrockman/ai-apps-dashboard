@@ -1,7 +1,8 @@
 import React from 'react';
 import { KiApp } from '../../types';
 import AppIcon from './AppIcon';
-import { kiApps } from '../../data/apps';
+import { useAuth } from '../../contexts/AuthContext';
+import { kiApps, utilityApps, ecommerceApps, consultingApps, chamberApps } from '../../data/apps';
 
 interface AppGridProps {
   onAppSelect: (app: KiApp) => void;
@@ -10,7 +11,28 @@ interface AppGridProps {
 }
 
 const AppGrid: React.FC<AppGridProps> = ({ onAppSelect, onAppLaunch, searchQuery }) => {
-  const filteredApps = kiApps.filter(app =>
+  const { user } = useAuth();
+
+  // Get available apps based on user role
+  const getAvailableApps = () => {
+    if (!user) return [];
+
+    switch (user.role) {
+      case 'consulting':
+        return [...utilityApps, ...consultingApps];
+      case 'ecommerce':
+        return [...utilityApps, ...ecommerceApps];
+      case 'chamber':
+        return [...utilityApps, ...chamberApps];
+      case 'master':
+        return kiApps;
+      default:
+        return kiApps;
+    }
+  };
+
+  const availableApps = getAvailableApps();
+  const filteredApps = availableApps.filter(app =>
     app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     app.description.toLowerCase().includes(searchQuery.toLowerCase())
   );

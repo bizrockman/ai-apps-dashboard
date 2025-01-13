@@ -5,4 +5,10 @@ export default {
     extend: {},
   },
   plugins: [],
+  safelist: [
+    'prose',
+    'prose-invert',
+    'list-disc',
+    'list-decimal'
+  ]
 };

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Search, User, Layout } from 'lucide-react';
+import { Search, User, Layout, Menu } from 'lucide-react';
 import ProfileMenu from './ProfileMenu';
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { KiApp } from '../../types';
@@ -10,6 +10,9 @@ interface HeaderProps {
   showProfileMenu: boolean;
   setShowProfileMenu: (show: boolean) => void;
   activeApp: KiApp | null;
+  onToggleSideMenu: () => void;
+  isSideMenuOpen: boolean;
+  isAuthenticated: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -18,6 +21,9 @@ const Header: React.FC<HeaderProps> = ({
   showProfileMenu,
   setShowProfileMenu,
   activeApp,
+  onToggleSideMenu,
+  isSideMenuOpen,
+  isAuthenticated,
 }) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -31,7 +37,17 @@ const Header: React.FC<HeaderProps> = ({
       <div className="h-16 px-4 grid grid-cols-3 items-center">
         {/* Left */}
         <div className="flex items-center">
-          <Layout className="h-6 w-6 text-blue-600" />
+          {isAuthenticated && !activeApp && (
+            <button
+              onClick={onToggleSideMenu}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <Menu className="h-6 w-6 text-gray-700" />
+            </button>
+          )}
+          {!isAuthenticated && (
+            <Layout className="h-6 w-6 text-blue-600" />
+          )}
         </div>
 
         {/* Center */}

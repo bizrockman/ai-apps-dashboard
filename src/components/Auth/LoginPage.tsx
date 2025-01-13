@@ -14,7 +14,7 @@ const LoginPage: React.FC = () => {
     
     const success = await login(username, password);
     if (!success) {
-      setError('Invalid credentials. Try demo/demo');
+      setError('Invalid credentials');
     }
   };
 
@@ -60,7 +60,9 @@ const LoginPage: React.FC = () => {
             </div>
             
             {error && (
-              <div className="text-red-500 text-sm text-center">{error}</div>
+              <div className="text-red-500 text-sm text-center">
+                <p>{error}</p>
+              </div>
             )}
 
             <button
@@ -69,11 +71,19 @@ const LoginPage: React.FC = () => {
             >
               Sign In
             </button>
-
-            <div className="text-center text-sm text-gray-500">
-              Demo credentials: demo/demo
-            </div>
           </form>
+
+          {/* Available Logins - Subtle Version */}
+          <div className="mt-6 pt-6 border-t text-center">
+            <p className="text-sm text-gray-500 mb-2">Available test accounts:</p>
+            <div className="space-y-1 text-xs text-gray-600">
+              <p><code className="bg-gray-50 px-1 py-0.5 rounded">demo/demo</code> - Demo Access (All Apps)</p>
+              <p><code className="bg-gray-50 px-1 py-0.5 rounded">consulting/consulting</code> - Consulting Apps</p>
+              <p><code className="bg-gray-50 px-1 py-0.5 rounded">ecommerce/ecommerce</code> - E-Commerce Apps</p>
+              <p><code className="bg-gray-50 px-1 py-0.5 rounded">kammer/kammer</code> - Chamber Apps</p>
+              <p><code className="bg-gray-50 px-1 py-0.5 rounded">master/master</code> - All Apps</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

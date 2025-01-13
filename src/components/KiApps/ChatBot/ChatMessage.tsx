@@ -1,5 +1,8 @@
 import React from 'react';
 import { User, Bot } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 
 interface ChatMessageProps {
   message: {
@@ -22,7 +25,24 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         <div className={`inline-block rounded-2xl px-4 py-2 ${
           message.isUser ? 'bg-blue-500 text-white' : 'bg-white text-gray-800'
         }`}>
-          <p className="text-sm">{message.content}</p>
+          <div className={`prose ${message.isUser ? 'prose-invert' : ''} max-w-none text-sm`}>
+            <ReactMarkdown 
+              remarkPlugins={[remarkGfm, remarkBreaks]}
+              components={{
+                // Override default styling for specific elements
+                p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
+                a: ({node, ...props}) => <a className="text-blue-400 hover:underline" {...props} />,
+                ul: ({node, ...props}) => <ul className="list-disc ml-4 mb-2" {...props} />,
+                ol: ({node, ...props}) => <ol className="list-decimal ml-4 mb-2" {...props} />,
+                code: ({node, inline, ...props}) => 
+                  inline ? 
+                    <code className="bg-gray-100 text-gray-800 px-1 rounded" {...props} /> :
+                    <code className="block bg-gray-100 text-gray-800 p-2 rounded my-2 whitespace-pre-wrap" {...props} />
+              }}
+            >
+              {message.content}
+            </ReactMarkdown>
+          </div>
         </div>
         <div className="mt-1">
           <span className="text-xs text-gray-500">
