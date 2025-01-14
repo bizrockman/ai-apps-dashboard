@@ -8,7 +8,7 @@ export interface KiApp {
   component: React.LazyExoticComponent<React.FC>;
 }
 
-export type UserRole = 'consulting' | 'ecommerce' | 'chamber' | 'master';
+export type UserRole = 'consulting' | 'ecommerce' | 'chamber' | 'master' | 'association' | 'logistics';
 
 export interface User {
   username: string;
@@ -21,4 +21,6 @@ export const ROLE_CREDENTIALS = {
   'ecommerce/ecommerce': 'ecommerce',
   'kammer/kammer': 'chamber',
   'master/master': 'master',
+  'verband/verband': 'association',
+  'mitglied/mitglied': 'logistics',
 } as const;
