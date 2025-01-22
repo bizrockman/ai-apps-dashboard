@@ -1,15 +1,8 @@
 import React from 'react';
-import { GraduationCap, ClipboardCheck, Scale, UserCheck, BookOpen, BadgeCheck, PenTool, BarChart, FileText } from 'lucide-react';
+import { GraduationCap, ClipboardCheck, Scale, UserCheck, BookOpen, BadgeCheck, PenTool, BarChart } from 'lucide-react';
 import { KiApp } from '../../types';
 
 export const chamberApps: KiApp[] = [
-  {
-    id: 'textblockai',
-    name: 'Text Block AI',
-    description: 'AI-powered text block generation',
-    icon: React.createElement(FileText, { className: "h-8 w-8" }),
-    component: React.lazy(() => import('../../components/KiApps/Chamber/TextBlockAI/TextBlockAI')),
-  },
   {
     id: 'apprenticeshipai',
     name: 'Apprenticeship AI',
