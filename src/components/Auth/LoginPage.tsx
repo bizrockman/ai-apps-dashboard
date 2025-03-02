@@ -83,6 +83,7 @@ const LoginPage: React.FC = () => {
               <p><code className="bg-gray-50 px-1 py-0.5 rounded">kammer/kammer</code> - Chamber Apps</p>
               <p><code className="bg-gray-50 px-1 py-0.5 rounded">verband/verband</code> - Wirtschaftsverband</p>
               <p><code className="bg-gray-50 px-1 py-0.5 rounded">mitglied/mitglied</code> - Mitglied des Verbands</p>
+              <p><code className="bg-gray-50 px-1 py-0.5 rounded">construction/construction</code> - Construction Apps</p>
             </div>
           </div>
         </div>

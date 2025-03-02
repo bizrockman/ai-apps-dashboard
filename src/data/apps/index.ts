@@ -4,6 +4,7 @@ import { consultingApps } from './consulting';
 import { chamberApps } from './chamber';
 import { associationApps } from './association';
 import { logisticsApps } from './logistics';
+import { constructionApps } from './construction';
 
 export {
   utilityApps,
@@ -11,7 +12,8 @@ export {
   consultingApps,
   chamberApps,
   associationApps,
-  logisticsApps
+  logisticsApps,
+  constructionApps
 };
 
 // Combined apps for the main grid
@@ -21,5 +23,6 @@ export const kiApps = [
   ...consultingApps,
   ...chamberApps,
   ...associationApps,
-  ...logisticsApps
+  ...logisticsApps,
+  ...constructionApps
 ];

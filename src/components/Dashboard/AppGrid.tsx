@@ -2,7 +2,7 @@ import React from 'react';
 import { KiApp } from '../../types';
 import AppIcon from './AppIcon';
 import { useAuth } from '../../contexts/AuthContext';
-import { kiApps, utilityApps, ecommerceApps, consultingApps, chamberApps, associationApps, logisticsApps } from '../../data/apps';
+import { kiApps, utilityApps, ecommerceApps, consultingApps, chamberApps, associationApps, logisticsApps, constructionApps } from '../../data/apps/index';
 
 interface AppGridProps {
   onAppSelect: (app: KiApp) => void;
@@ -28,6 +28,8 @@ const AppGrid: React.FC<AppGridProps> = ({ onAppSelect, onAppLaunch, searchQuery
         return [...utilityApps, ...associationApps];
       case 'logistics':
         return [...utilityApps, ...logisticsApps];
+      case 'construction':
+        return [...utilityApps, ...constructionApps];
       case 'master':
         return kiApps;
       default:

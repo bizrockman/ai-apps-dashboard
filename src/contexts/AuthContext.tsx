@@ -27,6 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         master: 'Master User',
         association: 'Association User',
         logistics: 'Logistics Member',
+        construction: 'Construction User',
       };
 
       setUser({
