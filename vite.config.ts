@@ -7,4 +7,7 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  preview: {
+    allowedHosts: ['ai-apps-dashboard.coolify.alsdienst.de'],
+  },
 });
