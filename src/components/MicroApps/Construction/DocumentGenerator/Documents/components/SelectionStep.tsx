@@ -9,14 +9,14 @@ interface SelectionStepProps {
   projects: Project[];
   documentTypes: DocumentType[];
   elements: ConstructionElement[];
-  selectedClient: number | '';
-  selectedProject: number | '';
-  selectedElement: number | '';
-  selectedType: number | '';
-  onClientChange: (clientId: number | '') => void;
-  onProjectChange: (projectId: number | '') => void;
-  onElementChange: (elementId: number | '') => void;
-  onTypeChange: (typeId: number | '') => void;
+  selectedClient: string | '';
+  selectedProject: string | '';
+  selectedElement: string | '';
+  selectedType: string | '';
+  onClientChange: (clientId: string | '') => void;
+  onProjectChange: (projectId: string | '') => void;
+  onElementChange: (elementId: string | '') => void;
+  onTypeChange: (typeId: string | '') => void;
   disabled?: boolean;
 }
 
@@ -37,12 +37,12 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
 }) => {
   // Filter projects by selected client
   const availableProjects = selectedClient
-    ? projects.filter(p => p.clientId === Number(selectedClient))
+    ? projects.filter(p => p.clientId === selectedClient)
     : [];
 
   // Filter elements by selected project
   const availableElements = selectedProject
-    ? elements.filter(e => e.projectId === Number(selectedProject))
+    ? elements.filter(e => e.projectId === selectedProject)
     : [];
 
   return (
@@ -54,7 +54,7 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
         </label>
         <select
           value={selectedClient}
-          onChange={(e) => onClientChange(e.target.value ? Number(e.target.value) : '')}
+          onChange={(e) => onClientChange(e.target.value ? e.target.value : '')}
           className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
           disabled={disabled}
@@ -76,7 +76,7 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
           </label>
           <select
             value={selectedProject}
-            onChange={(e) => onProjectChange(e.target.value ? Number(e.target.value) : '')}
+            onChange={(e) => onProjectChange(e.target.value ? e.target.value : '')}
             className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
             disabled={disabled}
@@ -99,7 +99,7 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
           </label>
           <select
             value={selectedElement}
-            onChange={(e) => onElementChange(e.target.value ? Number(e.target.value) : '')}
+            onChange={(e) => onElementChange(e.target.value ? e.target.value : '')}
             className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
             disabled={disabled}
@@ -122,7 +122,7 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
           </label>
           <select
             value={selectedType}
-            onChange={(e) => onTypeChange(e.target.value ? Number(e.target.value) : '')}
+            onChange={(e) => onTypeChange(e.target.value ? e.target.value : '')}
             className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
             disabled={disabled}

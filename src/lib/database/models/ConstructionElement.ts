@@ -1,9 +1,9 @@
 export interface ConstructionElement {
-  id: number;
+  id: string;
   code: string;
   name: string;
   description: string;
-  projectId: number;
+  projectId: string;
   createdAt: Date;
   updatedAt: Date;
 }

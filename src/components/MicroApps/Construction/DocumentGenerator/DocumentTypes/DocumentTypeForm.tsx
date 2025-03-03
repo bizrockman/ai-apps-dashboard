@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { X, Plus, GripVertical } from 'lucide-react';
-import { DocumentType, DocumentTypeBlock } from '../../../../../lib/database/models/DocumentType';
+import { X, GripVertical } from 'lucide-react';
+import { DocumentType, DocumentTypeBlock, CreateDocumentTypeDTO } from '../../../../../lib/database/models/DocumentType';
 import { TextBlock } from '../../../../../lib/database/models/TextBlock';
-import { DatabaseProvider } from '../../../../../lib/database/DatabaseProvider';
 
 interface DocumentTypeFormProps {
   type?: DocumentType;
   textBlocks: TextBlock[];
-  onSubmit: (data: Omit<DocumentType, 'id' | 'blocks' | 'createdAt' | 'updatedAt'>, blocks: DocumentTypeBlock[]) => void;
+  onSubmit: (data: CreateDocumentTypeDTO, blocks: DocumentTypeBlock[]) => void;
   onCancel: () => void;
 }
 
 const DocumentTypeForm: React.FC<DocumentTypeFormProps> = ({ type, textBlocks, onSubmit, onCancel }) => {
-  const [formData, setFormData] = useState({
-    id: type?.id || -1,
+  const [formData, setFormData] = React.useState<CreateDocumentTypeDTO>({    
     name: '',
     description: '',
   });
@@ -22,8 +20,7 @@ const DocumentTypeForm: React.FC<DocumentTypeFormProps> = ({ type, textBlocks, o
 
   useEffect(() => {
     if (type) {
-      setFormData({
-        id: type.id,
+      setFormData({        
         name: type.name,
         description: type.description,
       });
@@ -33,17 +30,16 @@ const DocumentTypeForm: React.FC<DocumentTypeFormProps> = ({ type, textBlocks, o
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
-      id: type?.id || -1,
+    onSubmit({      
       name: formData.name,
       description: formData.description
     }, blocks);
   };
 
-  const addTextBlock = (textBlockId: number) => {
-    const newBlock: DocumentTypeBlock = {
-      id: Date.now(), // More reliable temporary ID
-      documentTypeId: type?.id || -1,
+  const addTextBlock = (textBlockId: string) => {
+    const newBlock: DocumentTypeBlock = {            
+      id: crypto.randomUUID(),
+      documentTypeId: type?.id || '-1',
       textBlockId,
       order: blocks.length,
     };
@@ -51,9 +47,9 @@ const DocumentTypeForm: React.FC<DocumentTypeFormProps> = ({ type, textBlocks, o
   };
 
   const addInputField = () => {
-    const newBlock: DocumentTypeBlock = {
-      id: Date.now(), // More reliable temporary ID
-      documentTypeId: type?.id || -1,
+    const newBlock: DocumentTypeBlock = {     
+      id: crypto.randomUUID(), 
+      documentTypeId: type?.id || '-1',
       textBlockId: null,
       order: blocks.length,
       inputLabel: '',
@@ -147,7 +143,7 @@ const DocumentTypeForm: React.FC<DocumentTypeFormProps> = ({ type, textBlocks, o
                 </button>
                 {availableTextBlocks.length > 0 && (
                   <select
-                    onChange={(e) => addTextBlock(Number(e.target.value))}
+                    onChange={(e) => addTextBlock(e.target.value)}
                     className="px-3 py-1 border rounded-lg hover:bg-gray-50"
                     value=""
                   >

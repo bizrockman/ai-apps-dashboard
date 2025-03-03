@@ -1,9 +1,9 @@
 export interface Project {
-  id: number;
+  id: string;
   code: string;
   name: string;
   description: string;
-  clientId: number;
+  clientId: string;
   contactPerson: string;
   projectManager: string;
   status: 'planned' | 'active' | 'completed' | 'cancelled';
@@ -25,5 +25,5 @@ export interface CreateProjectDTO {
 }
 
 export interface UpdateProjectDTO extends Partial<CreateProjectDTO> {
-  id: number;
+  id: string;
 }

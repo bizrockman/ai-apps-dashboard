@@ -1,12 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
+import SupabaseClientSingleton from './SupabaseClient';
 import { ConstructionElementDAO } from '../dao/ConstructionElementDAO';
 import { ConstructionElement, CreateConstructionElementDTO, UpdateConstructionElementDTO } from '../models/ConstructionElement';
 
 export class SupabaseConstructionElementDAO implements ConstructionElementDAO {
-  private supabase = createClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY
-  );
+  private supabase = SupabaseClientSingleton.getInstance();
 
   async findAll(): Promise<ConstructionElement[]> {
     const { data, error } = await this.supabase

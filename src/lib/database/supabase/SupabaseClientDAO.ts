@@ -1,12 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
+import SupabaseClientSingleton from './SupabaseClient';
 import { ClientDAO } from '../dao/ClientDAO';
 import { Client, CreateClientDTO, UpdateClientDTO } from '../models/Client';
 
 export class SupabaseClientDAO implements ClientDAO {
-  private supabase = createClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY
-  );
+  private supabase = SupabaseClientSingleton.getInstance();
 
   async findAll(): Promise<Client[]> {
     const { data, error } = await this.supabase
@@ -18,7 +15,7 @@ export class SupabaseClientDAO implements ClientDAO {
     return data.map(this.mapToClient);
   }
 
-  async findById(id: number): Promise<Client | null> {
+  async findById(id: string): Promise<Client | null> {
     const { data, error } = await this.supabase
       .from('clients')
       .select('*')
@@ -50,8 +47,8 @@ export class SupabaseClientDAO implements ClientDAO {
     return data.map(this.mapToClient);
   }
 
-  async create(data: CreateClientDTO): Promise<Client> {
-    const { data: created, error } = await this.supabase
+  async create(data: CreateClientDTO): Promise<Client> {    
+      const { data: created, error } = await this.supabase
       .from('clients')
       .insert([data])
       .select()
@@ -63,6 +60,7 @@ export class SupabaseClientDAO implements ClientDAO {
 
   async update(data: UpdateClientDTO): Promise<Client> {
     const { id, ...updateData } = data;
+    console.log('client id', id);
     const { data: updated, error } = await this.supabase
       .from('clients')
       .update(updateData)
@@ -74,7 +72,7 @@ export class SupabaseClientDAO implements ClientDAO {
     return this.mapToClient(updated);
   }
 
-  async delete(id: number): Promise<boolean> {
+  async delete(id: string): Promise<boolean> {
     const { error } = await this.supabase
       .from('clients')
       .delete()

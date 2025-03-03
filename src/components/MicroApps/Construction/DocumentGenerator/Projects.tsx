@@ -42,7 +42,7 @@ const Projects: React.FC = () => {
     loadData();
   }, []);
 
-  const handleCreate = async (data: Omit<Project, 'id' | 'code' | 'createdAt' | 'updatedAt'>) => {
+  const handleCreate = async (data: Omit<Project, 'id' | 'code' | 'createdAt' | 'updatedAt'>) => {    
     try {
       await projectDAO.create(data);
       await loadData();

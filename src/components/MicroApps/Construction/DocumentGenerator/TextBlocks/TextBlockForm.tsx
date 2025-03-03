@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
-import { TextBlock } from '../../../../../lib/database/models/TextBlock';
+import { TextBlock, CreateTextBlockDTO } from '../../../../../lib/database/models/TextBlock';
 
 interface TextBlockFormProps {
   block?: TextBlock;
-  onSubmit: (data: Omit<TextBlock, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  onSubmit: (data: CreateTextBlockDTO) => void;
   onCancel: () => void;
 }
 
@@ -27,8 +27,7 @@ const TextBlockForm: React.FC<TextBlockFormProps> = ({ block, onSubmit, onCancel
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
-      id: block?.id || -1,
+    onSubmit({      
       ...formData
     });
   };

@@ -1,5 +1,5 @@
 export interface TextBlock {
-  id: number;
+  id: string;
   shortcut: string;
   name: string;
   content: string;
@@ -14,5 +14,5 @@ export interface CreateTextBlockDTO {
 }
 
 export interface UpdateTextBlockDTO extends Partial<CreateTextBlockDTO> {
-  id: number;
+  id: string;
 }

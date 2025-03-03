@@ -30,16 +30,16 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
   onPreview,
   onCancel
 }) => {
-  const [selectedClient, setSelectedClient] = useState<number | ''>('');
-  const [selectedProject, setSelectedProject] = useState<number | ''>('');
-  const [selectedElement, setSelectedElement] = useState<number | ''>('');
-  const [selectedType, setSelectedType] = useState<number | ''>('');
+  const [selectedClient, setSelectedClient] = useState<string | ''>('');
+  const [selectedProject, setSelectedProject] = useState<string | ''>('');
+  const [selectedElement, setSelectedElement] = useState<string | ''>('');
+  const [selectedType, setSelectedType] = useState<string | ''>('');
   const [showSelections, setShowSelections] = useState(true);
   const [content, setContent] = useState<{ [key: string]: string }>({});
   const [title, setTitle] = useState('');
 
   // Reset dependent fields when parent selection changes
-  const handleClientChange = (clientId: number | '') => {
+  const handleClientChange = (clientId: string | '') => {
     setSelectedClient(clientId);
     setSelectedProject('');
     setSelectedElement('');
@@ -47,23 +47,23 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     setContent({});
   };
 
-  const handleProjectChange = (projectId: number | '') => {
+  const handleProjectChange = (projectId: string | '') => {
     setSelectedProject(projectId);
     setSelectedElement('');
     setSelectedType('');
     setContent({});
   };
 
-  const handleElementChange = (elementId: number | '') => {
+  const handleElementChange = (elementId: string | '') => {
     setSelectedElement(elementId);
     setSelectedType('');
     setContent({});
   };
 
-  const handleTypeChange = useCallback((typeId: number | '') => {
+  const handleTypeChange = useCallback((typeId: string | '') => {
     setSelectedType(typeId);
     if (typeId) {
-      const type = documentTypes.find(t => t.id === Number(typeId));
+      const type = documentTypes.find(t => t.id === typeId);
       if (type) {
         const newContent: { [key: string]: string } = {};
         
@@ -91,9 +91,9 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
   };
 
   const handlePreview = () => {
-    const selectedDocType = documentTypes.find(t => t.id === Number(selectedType));
-    const selectedProj = projects.find(p => p.id === Number(selectedProject));
-    const selectedElem = elements.find(e => e.id === Number(selectedElement));
+    const selectedDocType = documentTypes.find(t => t.id === selectedType);
+    const selectedProj = projects.find(p => p.id === selectedProject);
+    const selectedElem = elements.find(e => e.id === selectedElement);
     
     // Generate automatic title if none provided
     const generatedTitle = title || [
@@ -121,9 +121,9 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
     // Create document data
     const documentData = {
       title: generatedTitle,
-      projectId: Number(selectedProject),
-      typeId: Number(selectedType),
-      elementId: Number(selectedElement),
+      projectId: selectedProject,
+      typeId: selectedType,
+      elementId: selectedElement,
       content: finalContent,
       status: 'draft'
     };
@@ -187,10 +187,10 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
             projects={projects}
             documentTypes={documentTypes}
             elements={elements}
-            selectedClient={selectedClient as number}
-            selectedProject={selectedProject as number}
-            selectedElement={selectedElement as number}
-            selectedType={selectedType as number}
+            selectedClient={selectedClient}
+            selectedProject={selectedProject}
+            selectedElement={selectedElement}
+            selectedType={selectedType}
             onReset={resetForm}
           />
         )}
@@ -213,7 +213,7 @@ const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
         {(selectedType || document) && (
           <DocumentContent
-            selectedType={documentTypes.find(t => t.id === Number(selectedType))}
+            selectedType={documentTypes.find(t => t.id ===selectedType)}
             textBlocks={textBlocks}
             content={content}
             onContentChange={handleContentChange}

@@ -22,8 +22,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ project, clients, onSubmit, o
     endDate: ''
   });
 
-  useEffect(() => {
-    if (project) {
+  useEffect(() => {    
+    if (project) {      
       setFormData({
         name: project.name,
         description: project.description,
@@ -37,11 +37,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ project, clients, onSubmit, o
     }
   }, [project]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {    
     e.preventDefault();
     onSubmit({
       ...formData,
-      clientId: parseInt(formData.clientId),
+      clientId: formData.clientId,
       startDate: new Date(formData.startDate),
       endDate: formData.endDate ? new Date(formData.endDate) : undefined,
       ...(project && { id: project.id })

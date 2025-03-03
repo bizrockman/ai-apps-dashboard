@@ -1,12 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
+import SupabaseClientSingleton from './SupabaseClient';
 import { ProjectDAO } from '../dao/ProjectDAO';
 import { Project, CreateProjectDTO, UpdateProjectDTO } from '../models/Project';
 
 export class SupabaseProjectDAO implements ProjectDAO {
-  private supabase = createClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY
-  );
+  private supabase = SupabaseClientSingleton.getInstance();
 
   async findAll(): Promise<Project[]> {
     const { data, error } = await this.supabase
@@ -53,6 +50,7 @@ export class SupabaseProjectDAO implements ProjectDAO {
 
   async create(data: CreateProjectDTO): Promise<Project> {
     // Convert camelCase to snake_case for Supabase
+    console.log(data)
     const snakeCaseData = {
       name: data.name,
       description: data.description,
@@ -65,7 +63,7 @@ export class SupabaseProjectDAO implements ProjectDAO {
       // Generate a unique code based on name if not provided
       code: data.name.substring(0, 3).toUpperCase() + Math.floor(Math.random() * 10000).toString().padStart(4, '0')
     };
-
+    console.log(snakeCaseData)
     const { data: created, error } = await this.supabase
       .from('projects')
       .insert([snakeCaseData])

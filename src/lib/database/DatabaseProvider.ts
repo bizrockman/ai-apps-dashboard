@@ -19,21 +19,15 @@ import { SupabaseTextBlockDAO } from './supabase/SupabaseTextBlockDAO';
 
 export class DatabaseProvider {
   private static instance: DatabaseProvider | null = null;
-  private clientDAO: ClientDAO;
-  private projectDAO: ProjectDAO;
-  private constructionElementDAO: ConstructionElementDAO;
-  private documentTypeDAO: DocumentTypeDAO;
-  private documentDAO: DocumentDAO;
-  private textBlockDAO: TextBlockDAO;
+  private clientDAO!: ClientDAO;
+  private projectDAO!: ProjectDAO;
+  private constructionElementDAO!: ConstructionElementDAO;
+  private documentTypeDAO!: DocumentTypeDAO;
+  private documentDAO!: DocumentDAO;
+  private textBlockDAO!: TextBlockDAO;
 
   private constructor() {
-    // Initialize with JSON implementation
-    this.clientDAO = new JsonClientDAO();
-    this.projectDAO = new JsonProjectDAO();
-    this.constructionElementDAO = new JsonConstructionElementDAO();
-    this.documentTypeDAO = new JsonDocumentTypeDAO();
-    this.documentDAO = new JsonDocumentDAO();
-    this.textBlockDAO = new JsonTextBlockDAO();
+    this.setImplementation('supabase');
   }
 
   public static getInstance(): DatabaseProvider {

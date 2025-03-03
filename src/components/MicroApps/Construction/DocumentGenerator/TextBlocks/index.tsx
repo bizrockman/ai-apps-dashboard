@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Blocks, Plus } from 'lucide-react';
-import { TextBlock } from '../../../../../lib/database/models/TextBlock';
+import { TextBlock, CreateTextBlockDTO } from '../../../../../lib/database/models/TextBlock';
 import { DatabaseProvider } from '../../../../../lib/database/DatabaseProvider';
 import TextBlockList from './TextBlockList';
 import TextBlockForm from './TextBlockForm';
@@ -47,11 +47,11 @@ const TextBlocks: React.FC = () => {
     }
   };
 
-  const handleUpdate = async (data: Omit<TextBlock, 'createdAt' | 'updatedAt'>) => {
+  const handleUpdate = async (data: CreateTextBlockDTO) => {
     if (!selectedBlock) return;
 
     try {
-      await textBlockDAO.update(data);
+      await textBlockDAO.update({id: selectedBlock.id, ...data});
       await loadData();
       setShowForm(false);
       setSelectedBlock(undefined);

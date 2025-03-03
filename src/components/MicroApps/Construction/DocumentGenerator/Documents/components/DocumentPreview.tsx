@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Document } from '../../../../../../lib/database/models/Document';
 import { DatabaseProvider } from '../../../../../../lib/database/DatabaseProvider';
 
@@ -19,6 +19,11 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const [editedContent, setEditedContent] = useState(document?.content || '');
   const [isSaving, setIsSaving] = useState(false);
   const documentDAO = DatabaseProvider.getInstance().getDocumentDAO();
+
+  useEffect(() => {
+    setEditedTitle(document?.title || '');
+    setEditedContent(document?.content || '');
+  }, [document]);
 
   const handleTitleChange = async () => {
     if (!document) return;

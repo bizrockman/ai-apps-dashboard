@@ -6,6 +6,7 @@ import { Project } from '../../../../../lib/database/models/Project';
 import { DocumentType } from '../../../../../lib/database/models/DocumentType';
 import { ConstructionElement } from '../../../../../lib/database/models/ConstructionElement';
 import { DatabaseProvider } from '../../../../../lib/database/DatabaseProvider';
+import { TextBlock } from '../../../../../lib/database/models/TextBlock';
 import DocumentList from './DocumentList';
 import DocumentForm from './DocumentForm';
 import DeleteConfirmationModal from '../DeleteConfirmationModal';
@@ -69,14 +70,13 @@ const Documents: React.FC = () => {
     loadData();
   }, []);
 
-  const handleCreate = async (data: any) => {
+  const handleCreate = async (data: any) => {    
     try {
-      // Create new document regardless of preview mode
-      const { showPreview, ...createData } = data;
-      const newDocument = await documentDAO.create(createData);
+      // Create new document regardless of preview mode      
+      const newDocument = await documentDAO.create(data);
       
       // Update UI based on mode
-      if (showPreview) {
+      if (newDocument) {
         setSelectedDocument(newDocument);
       } else {
         await loadData();
@@ -95,7 +95,7 @@ const Documents: React.FC = () => {
     if (!selectedDocument) return;
 
     try {
-      const { showPreview, ...updateData } = data;
+      const { ...updateData } = data;
       
       // Always update the document in the database
       const updatedDocument = await documentDAO.update({
@@ -104,7 +104,7 @@ const Documents: React.FC = () => {
       });
       
       // Update UI based on mode
-      if (showPreview) {
+      if (updatedDocument) {
         setSelectedDocument(updatedDocument);
       } else {
         await loadData();
@@ -142,8 +142,7 @@ const Documents: React.FC = () => {
   const handleEdit = (document: Document) => {
     // When editing from list, show preview directly
     setSelectedDocument({
-      ...document,
-      showPreview: true
+      ...document
     });
     setView('form');
   };
@@ -216,6 +215,7 @@ const Documents: React.FC = () => {
             onCancel={() => {
               setView('list');
               setSelectedDocument(undefined);
+              loadData();
             }}
           />
         </div>

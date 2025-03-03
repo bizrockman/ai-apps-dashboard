@@ -1,5 +1,5 @@
 export interface DocumentType {
-  id: number;
+  id: string;
   name: string;
   description: string;
   blocks: DocumentTypeBlock[];
@@ -8,9 +8,9 @@ export interface DocumentType {
 }
 
 export interface DocumentTypeBlock {
-  id: number;
-  documentTypeId: number;
-  textBlockId: number | null; // null for input fields
+  id: string;
+  documentTypeId: string;
+  textBlockId: string | null; // null for input fields
   order: number;
   inputLabel?: string; // Label for input fields
   inputType?: 'text' | 'number' | 'date'; // Type for input fields
@@ -23,14 +23,18 @@ export interface CreateDocumentTypeDTO {
 }
 
 export interface UpdateDocumentTypeDTO extends Partial<CreateDocumentTypeDTO> {
-  id: number;
+  id: string;
 }
 
 export interface CreateDocumentTypeBlockDTO {
-  documentTypeId: number;
-  textBlockId: number | null;
+  documentTypeId: string;
+  textBlockId: string | null;
   order: number;
   inputLabel?: string;
   inputType?: 'text' | 'number' | 'date';
   required?: boolean;
+}
+
+export interface UpdateDocumentTypeBlockDTO extends Partial<CreateDocumentTypeBlockDTO> {
+  id: string;
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FileStack, Plus } from 'lucide-react';
-import { DocumentType } from '../../../../../lib/database/models/DocumentType';
+import { CreateDocumentTypeDTO, DocumentType, DocumentTypeBlock } from '../../../../../lib/database/models/DocumentType';
 import { TextBlock } from '../../../../../lib/database/models/TextBlock';
 import { DatabaseProvider } from '../../../../../lib/database/DatabaseProvider';
 import DocumentTypeList from './DocumentTypeList';
@@ -21,7 +21,7 @@ const DocumentTypes: React.FC = () => {
   const documentTypeDAO = DatabaseProvider.getInstance().getDocumentTypeDAO();
   const textBlockDAO = DatabaseProvider.getInstance().getTextBlockDAO();
 
-  const saveBlocks = async (documentTypeId: number, blocks: DocumentTypeBlock[]) => {
+  const saveBlocks = async (documentTypeId: string, blocks: DocumentTypeBlock[]) => {
     try {
       // Remove all existing blocks first
       const existingType = await documentTypeDAO.findById(documentTypeId); 
@@ -76,7 +76,7 @@ const DocumentTypes: React.FC = () => {
   }, []);
 
   const handleCreate = async (
-    data: Omit<DocumentType, 'id' | 'blocks' | 'createdAt' | 'updatedAt'>,
+    data: CreateDocumentTypeDTO,
     blocks: DocumentTypeBlock[]
   ) => {
     setError(null);
@@ -96,7 +96,7 @@ const DocumentTypes: React.FC = () => {
   };
 
   const handleUpdate = async (
-    data: Omit<DocumentType, 'blocks' | 'createdAt' | 'updatedAt'>,
+    data: CreateDocumentTypeDTO,
     blocks: DocumentTypeBlock[]
   ) => {
     setError(null);
@@ -104,10 +104,10 @@ const DocumentTypes: React.FC = () => {
 
     try {
       // First update the document type
-      await documentTypeDAO.update(data);
+      let result = await documentTypeDAO.update({id: selectedType.id, ...data});
 
       // Update blocks after document type is updated
-      await saveBlocks(data.id, blocks);
+      await saveBlocks(result.id, blocks);
       
       // Reload data to get fresh state
       await loadData();

@@ -6,12 +6,13 @@ import { Project } from '../../../../../lib/database/models/Project';
 interface ElementFormProps {
   element?: ConstructionElement;
   projects: Project[];
-  onSubmit: (data: Omit<ConstructionElement, 'id' | 'code' | 'createdAt' | 'updatedAt'>) => void;
+  onSubmit: (data: Omit<ConstructionElement, 'code' | 'createdAt' | 'updatedAt'>) => void;
   onCancel: () => void;
 }
 
 const ElementForm: React.FC<ElementFormProps> = ({ element, projects, onSubmit, onCancel }) => {
   const [formData, setFormData] = React.useState({
+    id: element?.id || '',
     name: '',
     code: element?.code || 'BW001',
     description: '',
@@ -21,6 +22,7 @@ const ElementForm: React.FC<ElementFormProps> = ({ element, projects, onSubmit, 
   useEffect(() => {
     if (element) {
       setFormData({
+        id: element.id,
         name: element.name,
         code: element.code,
         description: element.description,
@@ -31,13 +33,8 @@ const ElementForm: React.FC<ElementFormProps> = ({ element, projects, onSubmit, 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
-      id: element?.id || -1,
-      name: formData.name,
-      code: formData.code,
-      description: formData.description,
-      projectId: Number(formData.projectId)
-    });
+    const { code, ...submitData } = formData;
+    onSubmit(submitData);
   };
 
   return (
@@ -62,7 +59,7 @@ const ElementForm: React.FC<ElementFormProps> = ({ element, projects, onSubmit, 
             </label>
             <select
               value={formData.projectId}
-              onChange={(e) => setFormData({ ...formData, projectId: Number(e.target.value) })}
+              onChange={(e) => setFormData({ ...formData, projectId: e.target.value })}
               className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             >

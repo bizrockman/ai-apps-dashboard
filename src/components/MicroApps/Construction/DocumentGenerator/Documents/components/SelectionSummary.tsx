@@ -10,10 +10,10 @@ interface SelectionSummaryProps {
   projects: Project[];
   documentTypes: DocumentType[];
   elements: ConstructionElement[];
-  selectedClient: number;
-  selectedProject: number;
-  selectedElement: number;
-  selectedType: number;
+  selectedClient: string;
+  selectedProject: string;
+  selectedElement: string;
+  selectedType: string;
   onReset: () => void;
 }
 

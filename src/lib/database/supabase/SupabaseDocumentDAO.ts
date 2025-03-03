@@ -1,12 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
+import SupabaseClientSingleton from './SupabaseClient';
 import { DocumentDAO } from '../dao/DocumentDAO';
 import { Document, CreateDocumentDTO, UpdateDocumentDTO } from '../models/Document';
 
 export class SupabaseDocumentDAO implements DocumentDAO {
-  private supabase = createClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY
-  );
+  private supabase = SupabaseClientSingleton.getInstance();
 
   async findAll(): Promise<Document[]> {
     const { data, error } = await this.supabase
@@ -18,7 +15,7 @@ export class SupabaseDocumentDAO implements DocumentDAO {
     return data.map(this.mapToDocument);
   }
 
-  async findById(id: number): Promise<Document | null> {
+  async findById(id: string): Promise<Document | null> {
     const { data, error } = await this.supabase
       .from('documents')
       .select('*')
@@ -63,6 +60,7 @@ export class SupabaseDocumentDAO implements DocumentDAO {
   }
 
   async create(data: CreateDocumentDTO): Promise<Document> {
+    console.log('Creating document:', data);
     // Convert camelCase to snake_case for Supabase
     const snakeCaseData = {
       title: data.title,
@@ -107,7 +105,7 @@ export class SupabaseDocumentDAO implements DocumentDAO {
     return this.mapToDocument(updated);
   }
 
-  async delete(id: number): Promise<boolean> {
+  async delete(id: string): Promise<boolean> {
     const { error } = await this.supabase
       .from('documents')
       .delete()

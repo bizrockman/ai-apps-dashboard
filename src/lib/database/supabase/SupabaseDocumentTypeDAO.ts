@@ -1,12 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
+import SupabaseClientSingleton from './SupabaseClient';
 import { DocumentTypeDAO } from '../dao/DocumentTypeDAO';
 import { DocumentType, CreateDocumentTypeDTO, UpdateDocumentTypeDTO, CreateDocumentTypeBlockDTO, DocumentTypeBlock } from '../models/DocumentType';
 
 export class SupabaseDocumentTypeDAO implements DocumentTypeDAO {
-  private supabase = createClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY
-  );
+  private supabase = SupabaseClientSingleton.getInstance();
 
   async findAll(): Promise<DocumentType[]> {
     const { data, error } = await this.supabase
@@ -17,11 +14,11 @@ export class SupabaseDocumentTypeDAO implements DocumentTypeDAO {
       `)
       .order('name');
 
-    if (error) throw error;
-    return data.map(this.mapToDocumentType);
+    if (error) throw error;    
+    return data.map(row => this.mapToDocumentType(row));
   }
 
-  async findById(id: number): Promise<DocumentType | null> {
+  async findById(id: string): Promise<DocumentType | null> {
     const { data, error } = await this.supabase
       .from('document_types')
       .select(`
@@ -66,7 +63,7 @@ export class SupabaseDocumentTypeDAO implements DocumentTypeDAO {
     return this.mapToDocumentType(updated);
   }
 
-  async delete(id: number): Promise<boolean> {
+  async delete(id: string): Promise<boolean> {
     // Note: Blocks will be automatically deleted due to ON DELETE CASCADE
     const { error } = await this.supabase
       .from('document_types')
@@ -94,7 +91,7 @@ export class SupabaseDocumentTypeDAO implements DocumentTypeDAO {
     if (error) throw error;
   }
 
-  async removeBlock(documentTypeId: number, blockId: number): Promise<void> {
+  async removeBlock(documentTypeId: string, blockId: string): Promise<void> {
     const { error } = await this.supabase
       .from('document_type_blocks')
       .delete()
@@ -104,7 +101,7 @@ export class SupabaseDocumentTypeDAO implements DocumentTypeDAO {
     if (error) throw error;
   }
 
-  async reorderBlocks(documentTypeId: number, blockIds: number[]): Promise<void> {
+  async reorderBlocks(documentTypeId: string, blockIds: string[]): Promise<void> {
     // Create a transaction to update all blocks in order
     const updates = blockIds.map((blockId, index) => {
       return this.supabase
@@ -123,13 +120,14 @@ export class SupabaseDocumentTypeDAO implements DocumentTypeDAO {
       id: row.id,
       name: row.name,
       description: row.description,
+      //blocks: row.document_type_blocks ? row.document_type_blocks.map((b) => this.mapToDocumentTypeBlock(b)) : [],
       blocks: row.document_type_blocks ? row.document_type_blocks.map(this.mapToDocumentTypeBlock) : [],
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at)
     };
   }
 
-  private mapToDocumentTypeBlock(row: any): DocumentTypeBlock {
+  private mapToDocumentTypeBlock(row: any): DocumentTypeBlock {   
     return {
       id: row.id,
       documentTypeId: row.document_type_id,

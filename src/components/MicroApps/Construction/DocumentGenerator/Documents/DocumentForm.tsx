@@ -30,21 +30,24 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
   onCancel
 }) => {
   const [showPreview, setShowPreview] = useState(false);
+  const [previewDocument, setPreviewDocument] = useState<Document | undefined>(document);
 
   useEffect(() => {
     // Show preview immediately if document has showPreview flag
-    if (document?.showPreview) {
+    if (document) {
       setShowPreview(true);
+      setPreviewDocument(document);
     }
   }, [document]);
 
   const handlePreview = (documentData: any) => {
-    onSubmit({ ...documentData, showPreview: true });
+    onSubmit({ ...documentData });
+    setPreviewDocument(document);
     setShowPreview(true);
   };
 
   const handleGenerate = (documentData: any) => {
-    onSubmit({ ...documentData, showPreview: false });
+    onSubmit({ ...documentData });
     onCancel();
   };
 
@@ -54,7 +57,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
 
   return showPreview ? (
     <DocumentPreview
-      document={document}
+      document={previewDocument}
       onBack={handleBack}
       onGenerate={handleGenerate}
     />

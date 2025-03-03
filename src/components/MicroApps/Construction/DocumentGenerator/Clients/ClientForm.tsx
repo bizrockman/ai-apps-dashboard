@@ -29,8 +29,7 @@ const ClientForm: React.FC<ClientFormProps> = ({ client, onSubmit, onCancel }) =
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
-      id: client?.id || -1,
+    onSubmit({      
       ...formData
     });
   };

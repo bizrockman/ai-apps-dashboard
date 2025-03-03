@@ -1,12 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
+import SupabaseClientSingleton from './SupabaseClient';
 import { TextBlockDAO } from '../dao/TextBlockDAO';
 import { TextBlock, CreateTextBlockDTO, UpdateTextBlockDTO } from '../models/TextBlock';
 
 export class SupabaseTextBlockDAO implements TextBlockDAO {
-  private supabase = createClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY
-  );
+  private supabase = SupabaseClientSingleton.getInstance();
 
   async findAll(): Promise<TextBlock[]> {
     const { data, error } = await this.supabase
@@ -18,7 +15,7 @@ export class SupabaseTextBlockDAO implements TextBlockDAO {
     return data.map(this.mapToTextBlock);
   }
 
-  async findById(id: number): Promise<TextBlock | null> {
+  async findById(id: string): Promise<TextBlock | null> {
     const { data, error } = await this.supabase
       .from('text_blocks')
       .select('*')
@@ -65,7 +62,7 @@ export class SupabaseTextBlockDAO implements TextBlockDAO {
     return this.mapToTextBlock(updated);
   }
 
-  async delete(id: number): Promise<boolean> {
+  async delete(id: string): Promise<boolean> {
     const { error } = await this.supabase
       .from('text_blocks')
       .delete()
