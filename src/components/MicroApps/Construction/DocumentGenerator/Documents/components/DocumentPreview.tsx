@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Document } from '../../../../../../lib/database/models/Document';
 import { DatabaseProvider } from '../../../../../../lib/database/DatabaseProvider';
+import { generateDocumentPDF } from '../../../../../../lib/api/documentGenerator';
 
 interface DocumentPreviewProps {
   document?: Document;
@@ -69,12 +70,35 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     }
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!document) return;
-    onGenerate({
-      ...document,
-      content: editedContent
-    });
+    
+    try {
+      // First save any pending changes
+      if (isEditing) {
+        await handleContentChange();
+        setIsEditing(false);
+      }
+      
+      // Create document data with updated content
+      const documentData = {
+        ...document,
+        content: editedContent
+      };
+      
+      // Generate PDF
+      await generateDocumentPDF(documentData);
+      
+      // Call the onGenerate callback to save data and return to list view
+      onGenerate(documentData);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      // Continue with onGenerate even if PDF generation fails
+      onGenerate({
+        ...document,
+        content: editedContent
+      });
+    }
   };
 
   return (
