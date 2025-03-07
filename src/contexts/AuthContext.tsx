@@ -1,6 +1,16 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { User, UserRole, ROLE_CREDENTIALS } from '../types';
 
+const USER_NAMES = {
+  consulting: { firstname: 'Sarah', lastname: 'Schmidt' },
+  ecommerce: { firstname: 'Michael', lastname: 'Weber' },
+  chamber: { firstname: 'Thomas', lastname: 'Müller' },
+  master: { firstname: 'Anna', lastname: 'Becker' },
+  association: { firstname: 'Klaus', lastname: 'Wagner' },
+  logistics: { firstname: 'Julia', lastname: 'Fischer' },
+  construction: { firstname: 'Martin', lastname: 'Hoffmann' }
+};
+
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
@@ -18,21 +28,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Check if credentials match any role-based login
     const credentials = `${username}/${password}`;
     const role = ROLE_CREDENTIALS[credentials as keyof typeof ROLE_CREDENTIALS];
-
+    
     if (role) {
-      const displayNames = {
-        consulting: 'Consulting User',
-        ecommerce: 'E-Commerce User',
-        chamber: 'Chamber User',
-        master: 'Master User',
-        association: 'Association User',
-        logistics: 'Logistics Member',
-        construction: 'Construction User',
-      };
+      const { firstname, lastname } = USER_NAMES[role];
 
       setUser({
         username,
-        displayName: displayNames[role],
+        displayName: `${firstname} ${lastname}`,
+        firstname,
+        lastname,
         role: role as UserRole,
       });
       setIsAuthenticated(true);
@@ -43,7 +47,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (username === 'demo' && password === 'demo') {
       setUser({
         username: 'demo',
-        displayName: 'Demo User',
+        displayName: 'Demo Account',
+        firstname: 'Demo',
+        lastname: 'User',
         role: 'master',
       });
       setIsAuthenticated(true);

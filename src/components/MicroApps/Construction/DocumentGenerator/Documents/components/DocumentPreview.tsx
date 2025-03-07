@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Document } from '../../../../../../lib/database/models/Document';
 import { DatabaseProvider } from '../../../../../../lib/database/DatabaseProvider';
 import { generateDocumentPDF } from '../../../../../../lib/api/documentGenerator';
+import { DocumentFilter } from '../../../../../../lib/utils/DocumentFilter';
+import { useAuth } from '../../../../../../contexts/AuthContext';
 
 interface DocumentPreviewProps {
   document?: Document;
@@ -19,27 +21,60 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const [editedTitle, setEditedTitle] = useState(document?.title || '');
   const [editedContent, setEditedContent] = useState(document?.content || '');
   const [isSaving, setIsSaving] = useState(false);
+  const [documentFilter, setDocumentFilter] = useState<DocumentFilter | null>(null);
   const documentDAO = DatabaseProvider.getInstance().getDocumentDAO();
+  const projectDAO = DatabaseProvider.getInstance().getProjectDAO();
+  const contactPersonDAO = DatabaseProvider.getInstance().getContactPersonDAO();
+  
+  const { user } = useAuth();
 
   useEffect(() => {
-    setEditedTitle(document?.title || '');
-    setEditedContent(document?.content || '');
+    const initializeContent = async () => {
+      if (!document || !user) return;
+
+      try {
+        // Get project and contact persons
+        const project = await projectDAO.findById(document.projectId);
+        const contactPersons = project ? await contactPersonDAO.findByProject(project.id) : [];
+        // Filter contact persons to only include those with clients
+        const contactPersonsWithClients = contactPersons.filter(person => 
+          person.clients && person.clients.length > 0
+        );
+
+        // Create filter and process content
+        const filter = new DocumentFilter(user, project, contactPersonsWithClients);
+        setDocumentFilter(filter);
+        const processedContent = await filter.processContent(document.content);
+
+        setEditedTitle(document.title);
+        setEditedContent(processedContent);
+      } catch (error) {
+        console.error('Error processing document content:', error);
+        setEditedTitle(document.title);
+        setEditedContent(document.content);
+      }
+    };
+
+    initializeContent();
   }, [document]);
 
   const handleTitleChange = async () => {
     if (!document) return;
     
+    // Create update data with only the title change
+    const updateData = {
+      id: document.id,
+      title: editedTitle,
+      content: document.content,
+      status: document.status,
+      projectId: document.projectId,
+      typeId: document.typeId,
+      elementId: document.elementId
+    };
+    
     try {
       setIsSaving(true);
-      await documentDAO.update({
-        id: document.id,
-        title: editedTitle,
-        status: document.status,
-        projectId: document.projectId,
-        typeId: document.typeId,
-        elementId: document.elementId,
-        content: document.content
-      });
+      await documentDAO.update(updateData);
       setIsEditingTitle(false);
     } catch (error) {
       console.error('Failed to update document title:', error);
@@ -51,17 +86,20 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
   const handleContentChange = async () => {
     if (!document) return;
     
+    // Create update data with only the content change
+    const updateData = {
+      id: document.id,
+      content: editedContent,
+      title: document.title,
+      status: document.status,
+      projectId: document.projectId,
+      typeId: document.typeId,
+      elementId: document.elementId
+    };
+    
     try {
       setIsSaving(true);
-      await documentDAO.update({
-        id: document.id,
-        title: document.title,
-        content: editedContent,
-        status: document.status,
-        projectId: document.projectId,
-        typeId: document.typeId,
-        elementId: document.elementId
-      });
+      await documentDAO.update(updateData);
       setIsEditing(false);
     } catch (error) {
       console.error('Failed to update document content:', error);
@@ -72,6 +110,20 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
 
   const handleGenerate = async () => {
     if (!document) return;
+
+    let our_sign = ''; // Standardwert setzen
+
+    if (documentFilter) {
+      our_sign = documentFilter.userSign(); // Falls vorhanden, Wert setzen
+    }
+    console.log(document);
+    // Create document data with current state
+    const documentData = {
+      ...document,
+      title: editedTitle,
+      content: editedContent,
+      our_sign: our_sign      
+    };
     
     try {
       // First save any pending changes
@@ -79,23 +131,26 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         await handleContentChange();
         setIsEditing(false);
       }
-      
-      // Create document data with updated content
-      const documentData = {
-        ...document,
-        content: editedContent
-      };
+      if (isEditingTitle) {
+        await handleTitleChange();
+        setIsEditingTitle(false);
+      }
       
       // Generate PDF
       await generateDocumentPDF(documentData);
       
       // Call the onGenerate callback to save data and return to list view
-      onGenerate(documentData);
+      onGenerate({
+        ...document,
+        title: editedTitle,
+        content: editedContent
+      });
     } catch (error) {
       console.error('Error generating PDF:', error);
       // Continue with onGenerate even if PDF generation fails
       onGenerate({
         ...document,
+        title: editedTitle,
         content: editedContent
       });
     }

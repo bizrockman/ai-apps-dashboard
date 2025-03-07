@@ -2,7 +2,7 @@ import React from 'react';
 import { FileText, FolderOpen, Image, FileStack, Blocks, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-type ActiveView = 'documents' | 'projects' | 'assets' | 'documentTypes' | 'textBlocks' | 'clients';
+type ActiveView = 'documents' | 'projects' | 'assets' | 'documentTypes' | 'textBlocks' | 'clients' | 'contactPersons';
 
 interface SideMenuProps {
   activeView: ActiveView;
@@ -13,9 +13,10 @@ const menuItems = [
   { id: 'documents', translationKey: 'navigation.documents', icon: FileText },    
   { id: 'documentTypes', translationKey: 'navigation.documentTypes', icon: FileStack },
   { id: 'textBlocks', translationKey: 'navigation.textBlocks', icon: Blocks },
-  { id: 'clients', translationKey: 'navigation.clients', icon: Users },
+  { id: 'clients', translationKey: 'navigation.clients', icon: Users },  
   { id: 'projects', translationKey: 'navigation.projects', icon: FolderOpen },
   { id: 'assets', translationKey: 'navigation.assets', icon: Image },
+  { id: 'contactPersons', translationKey: 'navigation.contactPersons', icon: Users },
 ] as const;
 
 const SideMenu: React.FC<SideMenuProps> = ({ activeView, onViewChange }) => {

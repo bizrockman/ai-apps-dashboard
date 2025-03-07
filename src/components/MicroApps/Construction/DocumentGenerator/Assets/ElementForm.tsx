@@ -33,8 +33,9 @@ const ElementForm: React.FC<ElementFormProps> = ({ element, projects, onSubmit, 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const { code, ...submitData } = formData;
-    onSubmit(submitData);
+    //const { code, ...submitData } = formData;
+    //onSubmit(submitData);
+    onSubmit(formData);
   };
 
   return (

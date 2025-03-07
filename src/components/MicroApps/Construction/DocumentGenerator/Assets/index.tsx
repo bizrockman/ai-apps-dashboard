@@ -43,7 +43,7 @@ const Assets: React.FC = () => {
     loadData();
   }, []);
 
-  const handleCreate = async (data: Omit<ConstructionElement, 'id' | 'code' | 'createdAt' | 'updatedAt'>) => {
+  const handleCreate = async (data: Omit<ConstructionElement, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
       await elementDAO.create(data);
       await loadData();
@@ -55,10 +55,10 @@ const Assets: React.FC = () => {
     }
   };
 
-  const handleUpdate = async (data: Omit<ConstructionElement, 'code' | 'createdAt' | 'updatedAt'>) => {
+  const handleUpdate = async (data: Omit<ConstructionElement, 'createdAt' | 'updatedAt'>) => {
     if (!selectedElement) return;
 
-    try {
+    try {     
       await elementDAO.update(data);
       await loadData();
       setShowForm(false);

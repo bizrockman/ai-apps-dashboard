@@ -1,9 +1,17 @@
-import React from 'react';
-import { Edit, Trash2 } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { Copy, Trash2, ArrowUpDown } from 'lucide-react';
 import { Document } from '../../../../../lib/database/models/Document';
 import { Project } from '../../../../../lib/database/models/Project';
 import { DocumentType } from '../../../../../lib/database/models/DocumentType';
 import { ConstructionElement } from '../../../../../lib/database/models/ConstructionElement';
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from '@tanstack/react-table';
 
 interface DocumentListProps {
   documents: Document[];
@@ -12,6 +20,7 @@ interface DocumentListProps {
   elements: ConstructionElement[];
   onEdit: (document: Document) => void;
   onDelete: (document: Document) => void;
+  onClone: (document: Document) => void;
 }
 
 const DocumentList: React.FC<DocumentListProps> = ({
@@ -20,19 +29,22 @@ const DocumentList: React.FC<DocumentListProps> = ({
   documentTypes,
   elements,
   onEdit,
-  onDelete
+  onDelete,
+  onClone
 }) => {
-  const getProjectName = (projectId: number) => {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  const getProjectName = (projectId: string) => {
     const project = projects.find(p => p.id === projectId);
     return project ? project.name : 'Unknown Project';
   };
 
-  const getTypeName = (typeId: number) => {
+  const getTypeName = (typeId: string) => {
     const type = documentTypes.find(t => t.id === typeId);
     return type ? type.name : 'Unknown Type';
   };
 
-  const getElementName = (elementId: number) => {
+  const getElementName = (elementId: string) => {
     const element = elements.find(e => e.id === elementId);
     return element ? element.name : 'Unknown Element';
   };
@@ -54,55 +66,170 @@ const DocumentList: React.FC<DocumentListProps> = ({
     }
   };
 
+  const columnHelper = createColumnHelper<Document>();
+
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor('title', {
+        header: ({ column }) => (
+          <button
+            onClick={() => column.toggleSorting()}
+            className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+            <span>Title</span>
+            <ArrowUpDown className="h-4 w-4" />
+          </button>
+        ),
+        cell: ({ row }) => (
+          <button
+            onClick={() => onEdit(row.original)}
+            className="text-gray-900 hover:text-blue-600 font-medium max-w-md truncate block"
+            title={row.original.title}
+          >
+            {row.original.title}
+          </button>
+        ),
+        size: 300,
+      }),
+      columnHelper.accessor('projectId', {
+        header: ({ column }) => (
+          <button
+            onClick={() => column.toggleSorting()}
+            className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+            <span>Project</span>
+            <ArrowUpDown className="h-4 w-4" />
+          </button>
+        ),
+        cell: ({ getValue }) => getProjectName(getValue()),
+        size: 200,
+      }),
+      columnHelper.accessor('typeId', {
+        header: ({ column }) => (
+          <button
+            onClick={() => column.toggleSorting()}
+            className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+            <span>Type</span>
+            <ArrowUpDown className="h-4 w-4" />
+          </button>
+        ),
+        cell: ({ getValue }) => getTypeName(getValue()),
+        size: 150,
+      }),
+      columnHelper.accessor('elementId', {
+        header: ({ column }) => (
+          <button
+            onClick={() => column.toggleSorting()}
+            className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+            <span>Element</span>
+            <ArrowUpDown className="h-4 w-4" />
+          </button>
+        ),
+        cell: ({ getValue }) => getElementName(getValue()),
+        size: 150,
+      }),
+      columnHelper.accessor('status', {
+        header: ({ column }) => (
+          <button
+            onClick={() => column.toggleSorting()}
+            className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+            <span>Status</span>
+            <ArrowUpDown className="h-4 w-4" />
+          </button>
+        ),
+        cell: ({ getValue }) => {
+          const status = getValue();
+          return (
+            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeClass(status)}`}>
+              {status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Unknown'}
+            </span>
+          );
+        },
+        size: 100,
+      }),
+      columnHelper.display({
+        id: 'actions',
+        header: () => (
+          <span className="text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
+            Actions
+          </span>
+        ),
+        cell: ({ row }) => (
+          <div className="text-right">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onClone(row.original);
+              }}
+              className="text-blue-600 hover:text-blue-900 mr-3"
+              title="Clone document"
+            >
+              <Copy className="h-4 w-4" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(row.original);
+              }}
+              className="text-red-600 hover:text-red-900"
+              title="Delete document"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        ),
+        size: 100,
+      }),
+    ],
+    [projects, documentTypes, elements, onClone, onDelete]
+  );
+
+  const table = useReactTable({
+    data: documents,
+    columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  });
+
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-y-auto max-w-[83vw]">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Element</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-          </tr>
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
+                <th key={header.id} className="px-6 py-3 text-left">
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {documents.map((document) => (
-            <tr key={document.id} className="hover:bg-gray-50">
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                <button
-                  onClick={() => onEdit(document)}
-                  className="text-gray-900 hover:text-blue-600"
+          {table.getRowModel().rows.map(row => (
+            <tr key={row.id} className="hover:bg-gray-50">
+              {row.getVisibleCells().map(cell => (
+                <td 
+                  key={cell.id} 
+                  className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 truncate"
+                  style={{ maxWidth: cell.column.getSize() }}
                 >
-                  {document.title}
-                </button>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {getProjectName(document.projectId)}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {getTypeName(document.typeId)}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {getElementName(document.elementId)}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeClass(document.status)}`}>
-                  {document.status ? document.status.charAt(0).toUpperCase() + document.status.slice(1) : 'Unknown'}
-                </span>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(document);
-                  }}
-                  className="text-red-600 hover:text-red-900"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </td>
+                  {flexRender(
+                    cell.column.columnDef.cell,
+                    cell.getContext()
+                  )}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>
@@ -111,4 +238,4 @@ const DocumentList: React.FC<DocumentListProps> = ({
   );
 };
 
-export default DocumentList
+export default DocumentList;

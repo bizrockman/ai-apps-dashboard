@@ -139,6 +139,33 @@ const Documents: React.FC = () => {
     }
   };
 
+  const handleClone = async (document: Document) => {
+    try {
+      // Create a new document with the same data but a modified title
+      const cloneData: CreateDocumentDTO = {
+        title: `${document.title} (Copy)`,
+        content: document.content,
+        projectId: document.projectId,
+        typeId: document.typeId,
+        elementId: document.elementId,
+        status: 'draft' // Always set status to draft for cloned documents
+      };
+
+      const clonedDocument = await documentDAO.create(cloneData);
+      
+      // Open the cloned document in edit mode
+      setSelectedDocument({
+        ...clonedDocument,
+      });
+      setView('form');
+      
+      await loadData(); // Refresh the list
+    } catch (err) {
+      setError('Failed to clone document');
+      console.error('Error cloning document:', err);
+    }
+  };
+
   const handleEdit = (document: Document) => {
     // When editing from list, show preview directly
     setSelectedDocument({
@@ -199,6 +226,7 @@ const Documents: React.FC = () => {
               elements={elements}
               onEdit={handleEdit}
               onDelete={handleDeleteClick}
+              onClone={handleClone}
             />
           </div>
         )

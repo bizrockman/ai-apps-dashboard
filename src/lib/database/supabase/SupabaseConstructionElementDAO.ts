@@ -8,7 +8,10 @@ export class SupabaseConstructionElementDAO implements ConstructionElementDAO {
   async findAll(): Promise<ConstructionElement[]> {
     const { data, error } = await this.supabase
       .from('construction_elements')
-      .select('*')
+      .select(`
+        *,
+        project:projects(*)
+      `)
       .order('name');
 
     if (error) throw error;
@@ -18,7 +21,10 @@ export class SupabaseConstructionElementDAO implements ConstructionElementDAO {
   async findById(id: number): Promise<ConstructionElement | null> {
     const { data, error } = await this.supabase
       .from('construction_elements')
-      .select('*')
+      .select(`
+        *,
+        project:projects(*)
+      `)
       .eq('id', id)
       .single();
 
@@ -29,7 +35,10 @@ export class SupabaseConstructionElementDAO implements ConstructionElementDAO {
   async findByProject(projectId: number): Promise<ConstructionElement[]> {
     const { data, error } = await this.supabase
       .from('construction_elements')
-      .select('*')
+      .select(`
+        *,
+        project:projects(*)
+      `)
       .eq('project_id', projectId)
       .order('name');
 
@@ -40,7 +49,10 @@ export class SupabaseConstructionElementDAO implements ConstructionElementDAO {
   async findByCode(code: string): Promise<ConstructionElement | null> {
     const { data, error } = await this.supabase
       .from('construction_elements')
-      .select('*')
+      .select(`
+        *,
+        project:projects(*)
+      `)
       .eq('code', code)
       .single();
 
@@ -49,11 +61,14 @@ export class SupabaseConstructionElementDAO implements ConstructionElementDAO {
   }
 
   async create(data: CreateConstructionElementDTO): Promise<ConstructionElement> {
+    // Generate a code if not provided
+    const code = await this.generateCode();
+    
     // Convert camelCase to snake_case for Supabase
     const snakeCaseData = {
       name: data.name,
-      description: data.description,
       code: data.code,
+      description: data.description,
       shortcut: data.shortcut,
       project_id: data.projectId
     };
@@ -69,22 +84,27 @@ export class SupabaseConstructionElementDAO implements ConstructionElementDAO {
   }
 
   async update(data: UpdateConstructionElementDTO): Promise<ConstructionElement> {
-    const { id, ...updateData } = data;
+    // Extract the ID and prepare update data
+    const { id, projectId, ...updateData } = data;
     
     // Convert camelCase to snake_case for Supabase
     const snakeCaseData: Record<string, any> = {};
     
     if (updateData.name !== undefined) snakeCaseData.name = updateData.name;
+    if (updateData.code !== undefined) snakeCaseData.code = updateData.code;
     if (updateData.description !== undefined) snakeCaseData.description = updateData.description;
     if (updateData.code !== undefined) snakeCaseData.code = updateData.code;
     if (updateData.shortcut !== undefined) snakeCaseData.shortcut = updateData.shortcut;
-    if (updateData.projectId !== undefined) snakeCaseData.project_id = updateData.projectId;
-
+    if (projectId !== undefined) snakeCaseData.project_id = projectId;
+    console.log(snakeCaseData)
     const { data: updated, error } = await this.supabase
       .from('construction_elements')
       .update(snakeCaseData)
       .eq('id', id)
-      .select()
+      .select(`
+        *,
+        project:projects(*)
+      `)
       .single();
 
     if (error) throw error;
@@ -100,12 +120,34 @@ export class SupabaseConstructionElementDAO implements ConstructionElementDAO {
     return !error;
   }
 
+  private async generateCode(): Promise<string> {
+    // Get all existing codes
+    const { data: elements } = await this.supabase
+      .from('construction_elements')
+      .select('code')
+      .order('code', { ascending: false })
+      .limit(1);
+
+    // Find the highest number and increment
+    let nextNumber = 1;
+    if (elements && elements.length > 0) {
+      const lastCode = elements[0].code;
+      const match = lastCode.match(/^BW(\d+)$/);
+      if (match) {
+        nextNumber = parseInt(match[1], 10) + 1;
+      }
+    }
+
+    // Format as BWxxxx where xxxx is padded with zeros
+    return `BW${String(nextNumber).padStart(4, '0')}`;
+  }
+
   private mapToConstructionElement(row: any): ConstructionElement {
     return {
       id: row.id,
-      code: row.code,
+      code: row.code || '',
       name: row.name,
-      description: row.description,
+      description: row.description || '',
       projectId: row.project_id,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at)

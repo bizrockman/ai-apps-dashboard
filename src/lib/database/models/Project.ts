@@ -4,24 +4,24 @@ export interface Project {
   name: string;
   description: string;
   clientId: string;
-  contactPerson: string;
-  projectManager: string;
+  costCenter?: string;
+  boqNumber?: string;
   status: 'planned' | 'active' | 'completed' | 'cancelled';
-  startDate: Date;
-  endDate?: Date;
   createdAt: Date;
   updatedAt: Date;
+  contactPersons?: ContactPerson[];
+  projectManagers?: ContactPerson[];
 }
 
 export interface CreateProjectDTO {
   name: string;
   description: string;
   clientId: number;
-  contactPerson: string;
-  projectManager: string;
+  costCenter?: string;
+  boqNumber?: string;
   status: 'planned' | 'active' | 'completed' | 'cancelled';
-  startDate: Date;
-  endDate?: Date;
+  contactPersonIds?: string[];
+  projectManagerIds?: string[];
 }
 
 export interface UpdateProjectDTO extends Partial<CreateProjectDTO> {

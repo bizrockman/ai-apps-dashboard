@@ -7,8 +7,9 @@ import Assets from './Assets/index';
 import DocumentTypes from './DocumentTypes';
 import TextBlocks from './TextBlocks';
 import Clients from './Clients/index';
+import ContactPersons from './ContactPersons';
 
-type ActiveView = 'documents' | 'projects' | 'assets' | 'documentTypes' | 'textBlocks' | 'clients';
+type ActiveView = 'documents' | 'projects' | 'assets' | 'documentTypes' | 'textBlocks' | 'clients' | 'contactPersons';
 
 const DocumentGenerator: React.FC = () => {
   const [activeView, setActiveView] = useState<ActiveView>('documents');
@@ -27,6 +28,8 @@ const DocumentGenerator: React.FC = () => {
         return <TextBlocks />;
       case 'clients':
         return <Clients />;
+      case 'contactPersons':
+        return <ContactPersons />;
       default:
         return <Documents />;
     }

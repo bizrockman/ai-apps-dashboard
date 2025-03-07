@@ -13,6 +13,8 @@ export type UserRole = 'consulting' | 'ecommerce' | 'chamber' | 'master' | 'asso
 export interface User {
   username: string;
   displayName: string;
+  firstname: string;
+  lastname: string;
   role: UserRole;
 }
 

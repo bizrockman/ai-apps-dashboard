@@ -17,5 +17,5 @@ export interface CreateConstructionElementDTO {
 }
 
 export interface UpdateConstructionElementDTO extends Partial<CreateConstructionElementDTO> {
-  id: number;
+  id: string;
 }

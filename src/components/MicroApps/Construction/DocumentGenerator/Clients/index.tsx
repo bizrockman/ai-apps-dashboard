@@ -6,8 +6,11 @@ import ClientList from './ClientList';
 import ClientForm from './ClientForm';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import EmptyState from './EmptyState';
+import { useTranslation } from 'react-i18next';
 
 const Clients: React.FC = () => {
+  const { t } = useTranslation();
+
   const [clients, setClients] = useState<Client[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -93,8 +96,8 @@ const Clients: React.FC = () => {
         <div className="flex items-center space-x-3">
           <Users className="h-8 w-8 text-blue-500" />
           <div>
-            <h2 className="text-xl font-semibold text-gray-800">Clients</h2>
-            <p className="text-gray-600">Manage construction clients and contacts</p>
+            <h2 className="text-xl font-semibold text-gray-800">{t('clients.title')}</h2>
+            <p className="text-gray-600">{t('clients.description')}</p>
           </div>
         </div>
         <button
@@ -105,7 +108,7 @@ const Clients: React.FC = () => {
           className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           <Plus className="h-4 w-4" />
-          <span>Add Client</span>
+          <span>{t('clients.singular')} {t('common.add')}</span>
         </button>
       </div>
 

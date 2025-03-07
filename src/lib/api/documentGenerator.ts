@@ -34,7 +34,34 @@ export async function generateDocumentPDF(documentData: any): Promise<void> {
         if (project.clientId) {
           const client = await clientDAO.findById(project.clientId);
           if (client) {
-            clientAddress = client.address;
+            // Construct address with proper line breaks
+            const addressParts = [];
+            
+            // Add name
+            addressParts.push(client.name);
+            
+            // Add business unit if available (preserve existing line breaks)
+            if (client.businessUnit) {
+              addressParts.push(client.businessUnit);
+            }
+            
+            // Add street address
+            if (client.street1) {
+              addressParts.push(client.street1);
+            }
+            if (client.street2) {
+              addressParts.push(client.street2);
+            }
+            
+            // Add city and zipcode
+            if (client.zipcode || client.city) {
+              addressParts.push(`${client.zipcode || ''} ${client.city || ''}`.trim());
+            }
+            
+            // Join all parts with line breaks, filtering out empty strings
+            clientAddress = addressParts
+              .filter(part => part && part.trim())
+              .join('\n');
           }
         }
       }
@@ -43,8 +70,9 @@ export async function generateDocumentPDF(documentData: any): Promise<void> {
     }
   }
 
-  // Format the current date as YYYY-MM-DD
-  const currentDate = new Date().toISOString().split('T')[0];
+  // Format the current date as dd.mm.yyyy
+  const date = new Date();
+  const currentDate = `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
 
   // Create the PDF data object
   const pdfData: PDFData = {

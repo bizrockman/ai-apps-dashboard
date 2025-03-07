@@ -4,6 +4,7 @@ import { ConstructionElementDAO } from './dao/ConstructionElementDAO';
 import { DocumentTypeDAO } from './dao/DocumentTypeDAO';
 import { DocumentDAO } from './dao/DocumentDAO';
 import { TextBlockDAO } from './dao/TextBlockDAO';
+import { ContactPersonDAO } from './dao/ContactPersonDAO';
 import { JsonClientDAO } from './json/JsonClientDAO';
 import { JsonProjectDAO } from './json/JsonProjectDAO';
 import { JsonConstructionElementDAO } from './json/JsonConstructionElementDAO';
@@ -16,6 +17,7 @@ import { SupabaseConstructionElementDAO } from './supabase/SupabaseConstructionE
 import { SupabaseDocumentTypeDAO } from './supabase/SupabaseDocumentTypeDAO';
 import { SupabaseDocumentDAO } from './supabase/SupabaseDocumentDAO';
 import { SupabaseTextBlockDAO } from './supabase/SupabaseTextBlockDAO';
+import { SupabaseContactPersonDAO } from './supabase/SupabaseContactPersonDAO';
 
 export class DatabaseProvider {
   private static instance: DatabaseProvider | null = null;
@@ -25,6 +27,7 @@ export class DatabaseProvider {
   private documentTypeDAO!: DocumentTypeDAO;
   private documentDAO!: DocumentDAO;
   private textBlockDAO!: TextBlockDAO;
+  private contactPersonDAO!: ContactPersonDAO;
 
   private constructor() {
     this.setImplementation('supabase');
@@ -61,6 +64,10 @@ export class DatabaseProvider {
     return this.textBlockDAO;
   }
 
+  public getContactPersonDAO(): ContactPersonDAO {
+    return this.contactPersonDAO;
+  }
+
   // Method to switch database implementations
   public setImplementation(implementation: 'json' | 'supabase') {
     switch (implementation) {
@@ -71,6 +78,7 @@ export class DatabaseProvider {
         this.documentTypeDAO = new JsonDocumentTypeDAO();
         this.documentDAO = new JsonDocumentDAO();
         this.textBlockDAO = new JsonTextBlockDAO();
+        this.contactPersonDAO = new SupabaseContactPersonDAO();
         break;
       case 'supabase':
         this.clientDAO = new SupabaseClientDAO();
@@ -79,6 +87,7 @@ export class DatabaseProvider {
         this.documentTypeDAO = new SupabaseDocumentTypeDAO();
         this.documentDAO = new SupabaseDocumentDAO();
         this.textBlockDAO = new SupabaseTextBlockDAO();
+        this.contactPersonDAO = new SupabaseContactPersonDAO();
         break;
       default:
         throw new Error(`Database implementation ${implementation} not supported`);

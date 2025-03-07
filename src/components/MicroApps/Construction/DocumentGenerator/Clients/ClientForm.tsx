@@ -9,29 +9,35 @@ interface ClientFormProps {
 }
 
 const ClientForm: React.FC<ClientFormProps> = ({ client, onSubmit, onCancel }) => {
-  const [formData, setFormData] = React.useState<CreateClientDTO>({
+  const [formData, setFormData] = React.useState<CreateClientDTO>(() => ({
     name: '',
     email: '',
     phone: '',
-    address: '',
-  });
+    businessUnit: '',
+    street1: '',
+    street2: '',
+    zipcode: '',
+    city: ''
+  }));
 
   useEffect(() => {
     if (client) {
       setFormData({
-        name: client.name,
-        email: client.email,
-        phone: client.phone,
-        address: client.address,
+        name: client.name || '',
+        email: client.email || '',
+        phone: client.phone || '',
+        businessUnit: client.businessUnit || '',
+        street1: client.street1|| '',
+        street2: client.street2 || '',
+        zipcode: client.zipcode || '',
+        city: client.city || ''
       });
     }
   }, [client]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({      
-      ...formData
-    });
+    onSubmit(formData);
   };
 
   return (
@@ -57,7 +63,7 @@ const ClientForm: React.FC<ClientFormProps> = ({ client, onSubmit, onCancel }) =
             <input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
               className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
@@ -70,9 +76,8 @@ const ClientForm: React.FC<ClientFormProps> = ({ client, onSubmit, onCancel }) =
             <input
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
+              onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"              
             />
           </div>
 
@@ -83,20 +88,68 @@ const ClientForm: React.FC<ClientFormProps> = ({ client, onSubmit, onCancel }) =
             <input
               type="tel"
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
               className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Address
+              Business Unit
             </label>
             <textarea
-              value={formData.address}
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              value={formData.businessUnit}
+              onChange={(e) => setFormData(prev => ({ ...prev, businessUnit: e.target.value }))}
               className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              rows={3}
+              rows={2}
+            />            
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Street 1
+            </label>
+            <input
+              type="text"
+              value={formData.street1}
+              onChange={(e) => setFormData(prev => ({ ...prev, street1: e.target.value }))}
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Street 2
+            </label>
+            <input
+              type="text"
+              value={formData.street2}
+              onChange={(e) => setFormData(prev => ({ ...prev, street2: e.target.value }))}
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Zipcode
+            </label>
+            <input
+              type="text"
+              value={formData.zipcode}
+              onChange={(e) => setFormData(prev => ({ ...prev, zipcode: e.target.value }))}
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              City
+            </label>
+            <input
+              type="text"
+              value={formData.city}
+              onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
 
@@ -121,4 +174,4 @@ const ClientForm: React.FC<ClientFormProps> = ({ client, onSubmit, onCancel }) =
   );
 };
 
-export default ClientForm
+export default ClientForm;

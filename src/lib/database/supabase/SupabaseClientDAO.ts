@@ -48,11 +48,22 @@ export class SupabaseClientDAO implements ClientDAO {
   }
 
   async create(data: CreateClientDTO): Promise<Client> {    
-      const { data: created, error } = await this.supabase
-      .from('clients')
-      .insert([data])
-      .select()
-      .single();
+    const snakeCaseData = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      business_unit: data.businessUnit,
+      street_1: data.street1,
+      street_2: data.street2,
+      zipcode: data.zipcode,
+      city: data.city
+    };
+
+    const { data: created, error } = await this.supabase
+    .from('clients')
+    .insert([snakeCaseData])
+    .select()
+    .single();
 
     if (error) throw error;
     return this.mapToClient(created);
@@ -60,10 +71,23 @@ export class SupabaseClientDAO implements ClientDAO {
 
   async update(data: UpdateClientDTO): Promise<Client> {
     const { id, ...updateData } = data;
-    console.log('client id', id);
+    
+    // Convert camelCase to snake_case for Supabase
+    const snakeCaseData: Record<string, any> = {};
+      
+    if (updateData.name !== undefined) snakeCaseData.name = updateData.name;
+    if (updateData.email !== undefined) snakeCaseData.email = updateData.email;
+    if (updateData.phone !== undefined) snakeCaseData.phone = updateData.phone;
+    if (updateData.businessUnit !== undefined) snakeCaseData.business_unit = updateData.businessUnit;
+    if (updateData.street1 !== undefined) snakeCaseData.street_1 = updateData.street1;
+    if (updateData.street2 !== undefined) snakeCaseData.street_2 = updateData.street2;
+    if (updateData.zipcode !== undefined) snakeCaseData.zipcode = updateData.zipcode;
+    if (updateData.city !== undefined) snakeCaseData.city = updateData.city;
+
+
     const { data: updated, error } = await this.supabase
       .from('clients')
-      .update(updateData)
+      .update(snakeCaseData)
       .eq('id', id)
       .select()
       .single();
@@ -87,7 +111,11 @@ export class SupabaseClientDAO implements ClientDAO {
       name: row.name,
       email: row.email,
       phone: row.phone,
-      address: row.address,
+      businessUnit: row.business_unit,
+      street1: row.street_1,
+      street2: row.street_2,
+      zipcode: row.zipcode,
+      city: row.city,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at)
     };

@@ -20,6 +20,7 @@ export const en = {
     documentTypes: 'Document Types',
     textBlocks: 'Text Blocks',
     clients: 'Clients',
+    contactPersons: 'Contact Persons',
     projects: 'Projects',
     assets: 'Construction Elements'
   },

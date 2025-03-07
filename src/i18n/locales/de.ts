@@ -19,9 +19,10 @@ export const de = {
     documents: 'Dokumente',
     documentTypes: 'Dokumententypen',
     textBlocks: 'Textbausteine',
-    clients: 'Kunden',
+    clients: 'Bauherren',
+    contactPersons: 'Ansprechpartner',
     projects: 'Projekte',
-    assets: 'Gewerke'
+    assets: 'Bauwerke'
   },
   documents: {
     title: 'Dokumente',
@@ -55,19 +56,24 @@ export const de = {
     deleteConfirm: 'Sind Sie sicher, dass Sie das Projekt "{{name}}" löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.'
   },
   clients: {
-    title: 'Kunden',
+    title: 'Bauherren',
+    singular: 'Bauherr',
     description: 'Verwalten Sie Baukunden und Kontakte',
-    addClient: 'Kunde hinzufügen',
-    editClient: 'Kunde bearbeiten',
-    noClients: 'Noch keine Kunden',
-    startMessage: 'Fügen Sie Ihren ersten Kunden hinzu',
+    addClient: 'Bauherr hinzufügen',
+    editClient: 'Bauherr bearbeiten',
+    noClients: 'Noch keine Bauherr',
+    startMessage: 'Fügen Sie Ihren ersten Bauherrn hinzu',
     fields: {
       name: 'Name',
       email: 'E-Mail',
       phone: 'Telefon',
-      address: 'Adresse'
+      businessUnit: 'Geschäftsbereich',
+      street1: 'Straße 1',
+      street2: 'Straße 2',
+      zipcode: 'PLZ',
+      city: 'Stadt'
     },
-    deleteConfirm: 'Sind Sie sicher, dass Sie den Kunden "{{name}}" löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.'
+    deleteConfirm: 'Sind Sie sicher, dass Sie den Bauherrn "{{name}}" löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.'
   },
   documentTypes: {
     title: 'Dokumententypen',
@@ -78,7 +84,7 @@ export const de = {
     description: 'Verwalten Sie wiederverwendbare Textbausteine für Dokumente'
   },
   assets: {
-    title: 'Gewerke',
-    description: 'Verwalten Sie Bauressourcen'
+    title: 'Bauwerke',
+    description: 'Verwalten Sie die Bauwerke zu den Projekten'
   }
 };
