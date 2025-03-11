@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
-import { Copy, Trash2, ArrowUpDown } from 'lucide-react';
+import { Copy, Trash2, ArrowUpDown, FileDown } from 'lucide-react';
 import { Document } from '../../../../../lib/database/models/Document';
 import { Project } from '../../../../../lib/database/models/Project';
 import { DocumentType } from '../../../../../lib/database/models/DocumentType';
 import { ConstructionElement } from '../../../../../lib/database/models/ConstructionElement';
+import { PDFService } from '../../../../../lib/api/pdfService';
 import {
   createColumnHelper,
   flexRender,
@@ -32,6 +33,7 @@ const DocumentList: React.FC<DocumentListProps> = ({
   onDelete,
   onClone
 }) => {
+  const pdfService = PDFService.getInstance();
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const getProjectName = (projectId: string) => {
@@ -63,6 +65,12 @@ const DocumentList: React.FC<DocumentListProps> = ({
         return 'bg-gray-100 text-gray-800';
       default:
         return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleDownloadPDF = (document: Document) => {
+    if (document.pdfContent && document.pdfFileName) {
+      pdfService.downloadPDFFromBase64(document.pdfContent, document.pdfFileName);
     }
   };
 
@@ -159,6 +167,15 @@ const DocumentList: React.FC<DocumentListProps> = ({
         ),
         cell: ({ row }) => (
           <div className="text-right">
+            {row.original.pdfContent && row.original.status === 'generated' && (
+              <button
+                onClick={() => handleDownloadPDF(row.original)}
+                className="text-green-600 hover:text-green-900 mr-3"
+                title="Download PDF"
+              >
+                <FileDown className="h-4 w-4" />
+              </button>
+            )}
             <button
               onClick={(e) => {
                 e.stopPropagation();

@@ -94,6 +94,7 @@ const Documents: React.FC = () => {
   const handleUpdate = async (data: any) => {
     if (!selectedDocument) return;
 
+    setIsLoading(true);
     try {
       const { ...updateData } = data;
       
@@ -103,19 +104,17 @@ const Documents: React.FC = () => {
         ...updateData
       });
       
-      // Update UI based on mode
-      if (updatedDocument) {
-        setSelectedDocument(updatedDocument);
-      } else {
-        await loadData();
-        setView('list');
-        setSelectedDocument(undefined);
-      }
+      // Ensure data is loaded before changing view
+      await loadData();
+      setSelectedDocument(undefined);
+      setView('list');
 
       setError(null);
     } catch (err) {
       setError('Failed to update document');
       console.error('Error updating document:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -239,11 +238,17 @@ const Documents: React.FC = () => {
             elements={elements}
             textBlocks={textBlocks}
             document={selectedDocument}
-            onSubmit={selectedDocument ? handleUpdate : handleCreate}
-            onCancel={() => {
-              setView('list');
+            onSubmit={async (data) => {
+              if (selectedDocument) {
+                await handleUpdate(data);
+              } else {
+                await handleCreate(data);
+              }
+            }}
+            onCancel={async () => {
               setSelectedDocument(undefined);
-              loadData();
+              await loadData();
+              setView('list');              
             }}
           />
         </div>

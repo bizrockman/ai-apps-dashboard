@@ -110,9 +110,36 @@ export class PDFService {
   }
 
   /**
+   * Download PDF from base64 data
+   * @param base64Data The base64 encoded PDF data
+   * @param fileName The name to save the file as
+   */
+  public downloadPDFFromBase64(base64Data: string, fileName: string): void {
+    // Create blob from base64
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    
+    // Create download URL and trigger download
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  /**
    * Download the PDF file
    * @param fileUrl The URL of the file to download
    * @param fileName The name to save the file as
+   * @deprecated Use downloadPDFFromBase64 instead
    */
   public downloadPDF(fileUrl: string, fileName: string): void {
     const link = document.createElement('a');

@@ -68,7 +68,9 @@ export class SupabaseDocumentDAO implements DocumentDAO {
       project_id: data.projectId,
       type_id: data.typeId,
       element_id: data.elementId,
-      status: data.status
+      status: data.status,      
+      pdf_content: data.pdfContent,
+      pdf_generated_at: data.pdfGeneratedAt
     };
 
     const { data: created, error } = await this.supabase
@@ -93,7 +95,10 @@ export class SupabaseDocumentDAO implements DocumentDAO {
     if (updateData.typeId !== undefined) snakeCaseData.type_id = updateData.typeId;
     if (updateData.elementId !== undefined) snakeCaseData.element_id = updateData.elementId;
     if (updateData.status !== undefined) snakeCaseData.status = updateData.status;
-
+    if (updateData.pdfContent !== undefined) snakeCaseData.pdf_content = updateData.pdfContent;
+    if (updateData.pdfGeneratedAt !== undefined) snakeCaseData.pdf_generated_at = updateData.pdfGeneratedAt;
+    if (updateData.pdfFileName !== undefined) snakeCaseData.pdf_file_name = updateData.pdfFileName;
+    
     const { data: updated, error } = await this.supabase
       .from('documents')
       .update(snakeCaseData)
@@ -122,7 +127,10 @@ export class SupabaseDocumentDAO implements DocumentDAO {
       projectId: row.project_id,
       typeId: row.type_id,
       elementId: row.element_id,
-      status: row.status as Document['status'],
+      status: row.status as Document['status'],      
+      pdfContent: row.pdf_content,
+      pdfFileName: row.pdf_file_name,
+      pdfGeneratedAt: row.pdf_generated_at ? new Date(row.pdf_generated_at) : undefined,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at)
     };

@@ -5,7 +5,10 @@ export interface Document {
   projectId: string;
   typeId: string;
   elementId: string;
-  status: 'draft' | 'review' | 'approved' | 'archived';
+  status: 'draft' | 'review' | 'approved' | 'archived' | 'generated';
+  pdfContent?: string;
+  pdfFileName?: string;
+  pdfGeneratedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -16,7 +19,10 @@ export interface CreateDocumentDTO {
   projectId: string;
   typeId: string;
   elementId: string;
-  status: 'draft' | 'review' | 'approved' | 'archived';
+  status: 'draft' | 'review' | 'approved' | 'archived' | 'generated';
+  pdfContent?: string;
+  pdfFileName?: string;
+  pdfGeneratedAt?: Date;
 }
 
 export interface UpdateDocumentDTO extends Partial<CreateDocumentDTO> {

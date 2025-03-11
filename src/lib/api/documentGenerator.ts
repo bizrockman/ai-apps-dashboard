@@ -8,7 +8,7 @@ import { DatabaseProvider } from '../database/DatabaseProvider';
 /**
  * Generate a PDF document from a Document object
  * @param documentData The document data to generate a PDF from
- * @returns A promise that resolves when the PDF has been generated and downloaded
+ * @returns A promise that resolves with the PDF response
  */
 export async function generateDocumentPDF(documentData: any): Promise<void> {
   if (!documentData) {
@@ -70,7 +70,7 @@ export async function generateDocumentPDF(documentData: any): Promise<void> {
     }
   }
 
-  // Format the current date as dd.mm.yyyy
+// Format the current date as dd.mm.yyyy
   const date = new Date();
   const currentDate = `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
 
@@ -92,7 +92,8 @@ export async function generateDocumentPDF(documentData: any): Promise<void> {
 
   // Generate the PDF
   const response = await pdfService.generatePDF(pdfData);
-
+  return response;
+  
   // If successful and we have a file URL and name, download the PDF
   if (response.success && response.fileUrl && response.fileName) {
     pdfService.downloadPDF(response.fileUrl, response.fileName);
