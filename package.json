@@ -1,23 +1,27 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "ai-dashboard",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "0.1.0",
+  "type": "commonjs",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "start": "next start"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@fal-ai/client": "^1.2.1",
+    "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.49.1",
     "@tanstack/react-table": "^8.13.2",
+    "@types/jsonwebtoken": "^9.0.9",
     "i18next": "^23.10.1",
     "i18next-browser-languagedetector": "^7.2.0",
     "idb": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.344.0",
+    "module-alias": "^2.2.3",
+    "next": "^15.2.2",
     "openai": "^4.28.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -32,6 +36,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.18",
+    "cross-env": "^7.0.3",
     "eslint": "^9.9.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.11",
@@ -41,5 +46,18 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.3.0",
     "vite": "^5.4.2"
-  }
+  },
+  "description": "[Edit in StackBlitz next generation editor ⚡️](https://stackblitz.com/~/github.com/bizrockman/ai-apps-dashboard)",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bizrockman/ai-apps-dashboard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bizrockman/ai-apps-dashboard/issues"
+  },
+  "homepage": "https://github.com/bizrockman/ai-apps-dashboard#readme"
 }
