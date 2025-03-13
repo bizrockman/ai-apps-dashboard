@@ -8,7 +8,7 @@ const USER_NAMES = {
   master: { firstname: 'Anna', lastname: 'Becker' },
   association: { firstname: 'Klaus', lastname: 'Wagner' },
   logistics: { firstname: 'Julia', lastname: 'Fischer' },
-  construction: { firstname: 'Martin', lastname: 'Hoffmann' }
+  construction: { firstname: 'Sabrina', lastname: 'Epmann' }
 };
 
 interface AuthContextType {
@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     // Demo login fallback
-    if (username === 'demo' && password === 'demo') {
+    if (username === 'demo' && password === 'demo123') {
       setUser({
         username: 'demo',
         displayName: 'Demo Account',

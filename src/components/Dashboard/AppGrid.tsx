@@ -29,7 +29,8 @@ const AppGrid: React.FC<AppGridProps> = ({ onAppSelect, onAppLaunch, searchQuery
       case 'logistics':
         return [...utilityApps, ...logisticsApps];
       case 'construction':
-        return [...utilityApps, ...constructionApps];
+        //return [...utilityApps, ...constructionApps];
+        return [...constructionApps];
       case 'master':
         return kiApps;
       default:

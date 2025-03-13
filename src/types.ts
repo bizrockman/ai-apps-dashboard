@@ -19,11 +19,11 @@ export interface User {
 }
 
 export const ROLE_CREDENTIALS = {
-  'consulting/consulting': 'consulting',
-  'ecommerce/ecommerce': 'ecommerce',
-  'kammer/kammer': 'chamber',
-  'master/master': 'master',
-  'verband/verband': 'association',
-  'mitglied/mitglied': 'logistics',
-  'construction/construction': 'construction',
+  //'consulting/consulting': 'consulting',
+  //'ecommerce/ecommerce': 'ecommerce',
+  //'kammer/kammer': 'chamber',
+  //'master/master': 'master',
+  //'verband/verband': 'association',
+  //'mitglied/mitglied': 'logistics',
+  'sepmann/Becker!$2025': 'construction',
 } as const;

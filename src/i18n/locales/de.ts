@@ -14,7 +14,8 @@ export const de = {
     required: 'Erforderlich',
     optional: 'Optional',
     actions: 'Aktionen',
-    select: 'Auswählen'
+    select: 'Auswählen',
+    navigation: 'Menü'
   },
   navigation: {
     documents: 'Dokumente',

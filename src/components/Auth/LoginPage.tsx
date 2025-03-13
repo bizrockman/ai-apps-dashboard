@@ -77,13 +77,13 @@ const LoginPage: React.FC = () => {
           <div className="mt-6 pt-6 border-t text-center">
             <p className="text-sm text-gray-500 mb-2">Available test accounts:</p>
             <div className="space-y-1 text-xs text-gray-600">
-              <p><code className="bg-gray-50 px-1 py-0.5 rounded">demo/demo</code> - Demo Access (All Apps)</p>
-              <p><code className="bg-gray-50 px-1 py-0.5 rounded">consulting/consulting</code> - Consulting Apps</p>
-              <p><code className="bg-gray-50 px-1 py-0.5 rounded">ecommerce/ecommerce</code> - E-Commerce Apps</p>
-              <p><code className="bg-gray-50 px-1 py-0.5 rounded">kammer/kammer</code> - Chamber Apps</p>
-              <p><code className="bg-gray-50 px-1 py-0.5 rounded">verband/verband</code> - Wirtschaftsverband</p>
-              <p><code className="bg-gray-50 px-1 py-0.5 rounded">mitglied/mitglied</code> - Mitglied des Verbands</p>
-              <p><code className="bg-gray-50 px-1 py-0.5 rounded">construction/construction</code> - Construction Apps</p>
+              {/* <p><code className="bg-gray-50 px-1 py-0.5 rounded">demo/demo</code> - Demo Access (All Apps)</p> */}
+              {/* <p><code className="bg-gray-50 px-1 py-0.5 rounded">consulting/consulting</code> - Consulting Apps</p> */}
+              {/* <p><code className="bg-gray-50 px-1 py-0.5 rounded">ecommerce/ecommerce</code> - E-Commerce Apps</p> */}
+              {/* <p><code className="bg-gray-50 px-1 py-0.5 rounded">kammer/kammer</code> - Chamber Apps</p> */}
+              {/* <p><code className="bg-gray-50 px-1 py-0.5 rounded">verband/verband</code> - Wirtschaftsverband</p> */}
+              {/* <p><code className="bg-gray-50 px-1 py-0.5 rounded">mitglied/mitglied</code> - Mitglied des Verbands</p> */}
+              {/* <p><code className="bg-gray-50 px-1 py-0.5 rounded">construction/construction</code> - Construction Apps</p> */}
             </div>
           </div>
         </div>
