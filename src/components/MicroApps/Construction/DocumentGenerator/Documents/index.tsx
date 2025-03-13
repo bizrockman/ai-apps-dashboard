@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, Plus } from 'lucide-react';
-import { Document } from '../../../../../lib/database/models/Document';
+import { CreateDocumentDTO, Document } from '../../../../../lib/database/models/Document';
 import { Client } from '../../../../../lib/database/models/Client';
 import { Project } from '../../../../../lib/database/models/Project';
 import { DocumentType } from '../../../../../lib/database/models/DocumentType';
@@ -11,6 +11,7 @@ import DocumentList from './DocumentList';
 import DocumentForm from './DocumentForm';
 import DeleteConfirmationModal from '../DeleteConfirmationModal';
 import EmptyState from '../EmptyState';
+import { useTranslation } from 'react-i18next';
 
 const Documents: React.FC = () => {
   const [view, setView] = useState<'list' | 'form'>('list');
@@ -99,7 +100,7 @@ const Documents: React.FC = () => {
       const { ...updateData } = data;
       
       // Always update the document in the database
-      const updatedDocument = await documentDAO.update({
+      await documentDAO.update({
         id: selectedDocument.id,
         ...updateData
       });
@@ -173,14 +174,16 @@ const Documents: React.FC = () => {
     setView('form');
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <FileText className="h-8 w-8 text-blue-500" />
           <div>
-            <h2 className="text-xl font-semibold text-gray-800">Documents</h2>
-            <p className="text-gray-600">Manage your construction documents</p>
+            <h2 className="text-xl font-semibold text-gray-800">{t('documents.title')}</h2>
+            <p className="text-gray-600">{t('documents.description')}</p>
           </div>
         </div>
         {view === 'list' && (
@@ -192,7 +195,7 @@ const Documents: React.FC = () => {
             className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             <Plus className="h-4 w-4" />
-            <span>Add Document</span>
+            <span>{t('documents.singular')} {t('common.add')}</span>
           </button>
         )}
       </div>

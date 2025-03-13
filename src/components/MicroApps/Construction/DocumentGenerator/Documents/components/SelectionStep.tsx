@@ -3,7 +3,7 @@ import { Client } from '../../../../../../lib/database/models/Client';
 import { Project } from '../../../../../../lib/database/models/Project';
 import { DocumentType } from '../../../../../../lib/database/models/DocumentType';
 import { ConstructionElement } from '../../../../../../lib/database/models/ConstructionElement';
-
+import { useTranslation } from 'react-i18next';
 interface SelectionStepProps {
   clients: Client[];
   projects: Project[];
@@ -45,12 +45,14 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
     ? elements.filter(e => e.projectId === selectedProject)
     : [];
 
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-4 bg-white p-4 border-b">
       {/* Client Selection */}
       <div className="w-full">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Client
+          {t('clients.singular')}
         </label>
         <select
           value={selectedClient}
@@ -59,7 +61,7 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
           required
           disabled={disabled}
         >
-          <option value="">Select Client</option>
+          <option value="">{t('clients.singular')} {t('common.select').toLowerCase()}</option>
           {clients.map((client) => (
             <option key={client.id} value={client.id}>
               {client.name}
@@ -72,7 +74,7 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
       {selectedClient && (
         <div className="w-full">
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Project
+            {t('documents.fields.project')}
           </label>
           <select
             value={selectedProject}
@@ -81,7 +83,7 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
             required
             disabled={disabled}
           >
-            <option value="">Select Project</option>
+            <option value="">{t('projects.singular')} {t('common.select').toLowerCase()}</option>
             {availableProjects.map((project) => (
               <option key={project.id} value={project.id}>
                 {project.name}
@@ -95,7 +97,7 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
       {selectedProject && (
         <div className="w-full">
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Construction Element
+            {t('documents.fields.element')}
           </label>
           <select
             value={selectedElement}
@@ -104,7 +106,7 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
             required
             disabled={disabled}
           >
-            <option value="">Select Element</option>
+            <option value="">{t('elements.singular')} {t('common.select').toLowerCase()}</option>
             {availableElements.map((element) => (
               <option key={element.id} value={element.id}>
                 {element.name}
@@ -118,7 +120,7 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
       {selectedElement && (
         <div className="w-full">
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Document Type
+            {t('documents.fields.documentType')}
           </label>
           <select
             value={selectedType}
@@ -127,7 +129,7 @@ const SelectionStep: React.FC<SelectionStepProps> = ({
             required
             disabled={disabled}
           >
-            <option value="">Select Type</option>
+            <option value="">{t('documentTypes.singular')} {t('common.select').toLowerCase()}</option>
             {documentTypes.map((type) => (
               <option key={type.id} value={type.id}>
                 {type.name}

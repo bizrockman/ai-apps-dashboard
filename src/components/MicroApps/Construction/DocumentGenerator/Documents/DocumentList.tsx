@@ -5,6 +5,7 @@ import { Project } from '../../../../../lib/database/models/Project';
 import { DocumentType } from '../../../../../lib/database/models/DocumentType';
 import { ConstructionElement } from '../../../../../lib/database/models/ConstructionElement';
 import { PDFService } from '../../../../../lib/api/pdfService';
+import { useTranslation } from 'react-i18next';
 import {
   createColumnHelper,
   flexRender,
@@ -68,6 +69,8 @@ const DocumentList: React.FC<DocumentListProps> = ({
     }
   };
 
+  const { t } = useTranslation();
+
   const handleDownloadPDF = (document: Document) => {
     if (document.pdfContent && document.pdfFileName) {
       pdfService.downloadPDFFromBase64(document.pdfContent, document.pdfFileName);
@@ -84,7 +87,7 @@ const DocumentList: React.FC<DocumentListProps> = ({
             onClick={() => column.toggleSorting()}
             className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
-            <span>Title</span>
+            <span>{t('documents.fields.title')}</span>
             <ArrowUpDown className="h-4 w-4" />
           </button>
         ),
@@ -105,7 +108,7 @@ const DocumentList: React.FC<DocumentListProps> = ({
             onClick={() => column.toggleSorting()}
             className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
-            <span>Project</span>
+            <span>{t('documents.fields.project')}</span>
             <ArrowUpDown className="h-4 w-4" />
           </button>
         ),
@@ -118,7 +121,7 @@ const DocumentList: React.FC<DocumentListProps> = ({
             onClick={() => column.toggleSorting()}
             className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
-            <span>Type</span>
+            <span>{t('documents.fields.documentType')}</span>
             <ArrowUpDown className="h-4 w-4" />
           </button>
         ),
@@ -131,7 +134,7 @@ const DocumentList: React.FC<DocumentListProps> = ({
             onClick={() => column.toggleSorting()}
             className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
-            <span>Element</span>
+            <span>{t('documents.fields.element')}</span>
             <ArrowUpDown className="h-4 w-4" />
           </button>
         ),
@@ -144,7 +147,7 @@ const DocumentList: React.FC<DocumentListProps> = ({
             onClick={() => column.toggleSorting()}
             className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
-            <span>Status</span>
+            <span>{t('documents.fields.status')}</span>
             <ArrowUpDown className="h-4 w-4" />
           </button>
         ),
@@ -152,7 +155,7 @@ const DocumentList: React.FC<DocumentListProps> = ({
           const status = getValue();
           return (
             <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeClass(status)}`}>
-              {status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Unknown'}
+              {status ? t(`documents.fields.status_label.${status}`) : 'Unknown'}
             </span>
           );
         },
@@ -162,7 +165,7 @@ const DocumentList: React.FC<DocumentListProps> = ({
         id: 'actions',
         header: () => (
           <span className="text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
-            Actions
+            {t('common.actions')}
           </span>
         ),
         cell: ({ row }) => (

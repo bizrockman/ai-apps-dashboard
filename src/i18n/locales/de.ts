@@ -13,7 +13,8 @@ export const de = {
     warning: 'Warnung',
     required: 'Erforderlich',
     optional: 'Optional',
-    actions: 'Aktionen'
+    actions: 'Aktionen',
+    select: 'Auswählen'
   },
   navigation: {
     documents: 'Dokumente',
@@ -24,15 +25,42 @@ export const de = {
     projects: 'Projekte',
     assets: 'Bauwerke'
   },
+  elements: {
+    title: 'Bauwerke',
+    singular: 'Bauwerk',
+    description: 'Verwalten Sie Ihre Bauwerke',
+    addElement: 'Bauwerk hinzufügen',
+    noElements: 'Noch keine Bauwerke',
+  },
   documents: {
     title: 'Dokumente',
+    singular: 'Dokument',
     description: 'Verwalten Sie Ihre Baudokumente',
     addDocument: 'Dokument hinzufügen',
     noDocuments: 'Noch keine Dokumente',
-    startMessage: 'Erstellen Sie Ihr erstes Dokument'
+    startMessage: 'Erstellen Sie Ihr erstes Dokument',
+    fields: {
+      title: 'Titel',
+      project: 'Projekt',
+      documentType: 'Dokumenttyp',
+      element: 'Bauwerk',
+      status: 'Status',   
+      status_label: {
+        generated: 'Generiert',
+        draft: 'Entwurf'
+      }   
+    }
+  },
+  documentTypes: {
+    title: 'Dokumententypen',
+    singular: 'Dokumenttyp',
+    description: 'Verwalten Sie Dokumentvorlagen und -typen',
+    addDocumentType: 'Dokumenttyp hinzufügen',
+    noDocumentTypes: 'Noch keine Dokumenttypen',
   },
   projects: {
     title: 'Projekte',
+    singular: 'Projekt',
     description: 'Verwalten Sie Bauprojekte',
     addProject: 'Projekt hinzufügen',
     editProject: 'Projekt bearbeiten',
@@ -74,10 +102,6 @@ export const de = {
       city: 'Stadt'
     },
     deleteConfirm: 'Sind Sie sicher, dass Sie den Bauherrn "{{name}}" löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.'
-  },
-  documentTypes: {
-    title: 'Dokumententypen',
-    description: 'Verwalten Sie Dokumentvorlagen und -typen'
   },
   textBlocks: {
     title: 'Textbausteine',
